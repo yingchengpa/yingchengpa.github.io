@@ -96,19 +96,19 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="介绍本文主要介绍一种通过windbg分析内存泄漏的方法。 现象后台检测程序在某天上报了告警，大概就是某程序的提交内存达到了1.0G。登陆后台查看，该进程已经运行了90天，提交内存每天都在持续上涨，从启动到目前为止大概累计上升了800M。应该是存在内存泄漏。让运维通过工具保存了fulldump 准备工作 下载地址（提取码：11bg） 设置好系统的pdb1e:\mylocalsymbols;SRV*e">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="windbg分析内存泄漏">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/windbg分析内存泄漏/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="介绍本文主要介绍一种通过windbg分析内存泄漏的方法。 现象后台检测程序在某天上报了告警，大概就是某程序的提交内存达到了1.0G。登陆后台查看，该进程已经运行了90天，提交内存每天都在持续上涨，从启动到目前为止大概累计上升了800M。应该是存在内存泄漏。让运维通过工具保存了fulldump 准备工作 下载地址（提取码：11bg） 设置好系统的pdb1e:\mylocalsymbols;SRV*e">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:image" content="http://91dengdeng.cn/wp-content/uploads/2018/10/5d2f13bab110f9858adade236e77c2bf.png">
+<meta property="og:updated_time" content="2019-05-07T11:24:41.316Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="windbg分析内存泄漏">
+<meta name="twitter:description" content="介绍本文主要介绍一种通过windbg分析内存泄漏的方法。 现象后台检测程序在某天上报了告警，大概就是某程序的提交内存达到了1.0G。登陆后台查看，该进程已经运行了90天，提交内存每天都在持续上涨，从启动到目前为止大概累计上升了800M。应该是存在内存泄漏。让运维通过工具保存了fulldump 准备工作 下载地址（提取码：11bg） 设置好系统的pdb1e:\mylocalsymbols;SRV*e">
+<meta name="twitter:image" content="http://91dengdeng.cn/wp-content/uploads/2018/10/5d2f13bab110f9858adade236e77c2bf.png">
 
 
 
@@ -116,7 +116,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/windbg分析内存泄漏/">
 
 
 
@@ -126,7 +126,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>windbg分析内存泄漏 | 睡在床板下</title>
   
 
 
@@ -341,7 +341,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/windbg分析内存泄漏/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +358,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">windbg分析内存泄漏
 
               
             
@@ -384,7 +384,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 19:24:00 / Modified: 19:24:41" itemprop="dateCreated datePublished" datetime="2019-05-07T19:24:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +448,33 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>本文主要介绍一种通过windbg分析内存泄漏的方法。</p>
+<h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p>后台检测程序在某天上报了告警，大概就是某程序的提交内存达到了1.0G。登陆后台查看，该进程已经运行了90天，提交内存每天都在持续上涨，从启动到目前为止大概累计上升了800M。应该是存在内存泄漏。<br>让运维通过工具保存了fulldump</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
+<li><a href="https://pan.baidu.com/s/1vUjAr7edFTxxcKGnGEaatQ" title="下载地址" target="_blank" rel="noopener">下载地址</a>（提取码：11bg）</li>
+<li>设置好系统的pdb<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+<h1 id="查找堆块"><a href="#查找堆块" class="headerlink" title="查找堆块"></a>查找堆块</h1><p>打印所有堆块信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!heap -s</span><br></pre></td></tr></table></figure></p>
+<p>显示如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; !heap -s</span><br><span class="line">HEAPEXT: Unable to read ntdll!RtlpDisableHeapLookaside</span><br><span class="line">  Heap     Flags   Reserv  Commit  Virt   Free  List   UCR  Virt  Lock  Fast </span><br><span class="line">                    (k)     (k)    (k)     (k) length      blocks cont. heap </span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">006f0000 00000002 1246976 1241928 1246976    982   236    81    0      a   LFH</span><br><span class="line">00190000 00001002    3136   1564   3136    390     7     3    0      0   LFH</span><br><span class="line">    External fragmentation  24 % (7 free blocks)</span><br><span class="line">00110000 00001002     256      4    256      1     1     1    0      0      </span><br><span class="line">02050000 00001002     256    176    256      1    18     1    0      0   LFH</span><br><span class="line">02240000 00001002     256      4    256      2     1     1    0      0      </span><br><span class="line">006a0000 00001002      64     12     64      4     2     1    0      0      </span><br><span class="line">044f0000 00001002     256    216    256      7     4     1    0      0   LFH</span><br><span class="line">119d0000 00001002    7424   5820   7424    134   133     4    0     c8   LFH</span><br><span class="line">14290000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">141d0000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">17f20000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">19030000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">191b0000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">19380000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">19300000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">155f0000 00001003     256      4    256      2     1     1    0    bad      </span><br><span class="line">-----------------------------------------------------------------------------</span><br></pre></td></tr></table></figure></p>
+<p>通过观察，我们知道了是006f0000堆块占用了大量内存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HEAPEXT: Unable to read ntdll!RtlpDisableHeapLookaside</span><br><span class="line">  Heap     Flags   Reserv  Commit  Virt   Free  List   UCR  Virt  Lock  Fast </span><br><span class="line">                    (k)     (k)    (k)     (k) length      blocks cont. heap </span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">006f0000 00000002 1246976 1241928 1246976    982   236    81    0      a   LFH</span><br></pre></td></tr></table></figure></p>
+<h1 id="查看堆块内存百分比"><a href="#查看堆块内存百分比" class="headerlink" title="查看堆块内存百分比"></a>查看堆块内存百分比</h1><p>内存持续上涨可能是某块固定大小内存被重复申请，所以统计下该堆块中各个内存大小的分配次数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!heap -stat -h 006f0000</span><br></pre></td></tr></table></figure></p>
+<p>查找堆中各个内存大小占用的百分比</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; !heap -stat -h 006f0000</span><br><span class="line">unable to resolve ntdll!RtlpStackTraceDataBase</span><br><span class="line"> heap @ 006f0000</span><br><span class="line">group-by: TOTSIZE max-display: 20</span><br><span class="line">    size     #blocks     total     ( %) (percent of total busy bytes)</span><br><span class="line">    14 23acbbe - 2c97ead8  (92.78)</span><br><span class="line">    a4 2ba0c - 1bf2fb0  (3.63)</span><br><span class="line">    1000 8f5 - 8f5000  (1.16)</span><br><span class="line">    1a4 3b9c - 61cbf0  (0.79)</span><br><span class="line">    20c 15fb - 2cfdc4  (0.37)</span><br><span class="line">    25 b77d - 1a8511  (0.22)</span><br><span class="line">    64 3ba0 - 174a80  (0.19)</span><br><span class="line">    24 75ae - 108c78  (0.13)</span><br><span class="line">    11c e4a - fda18  (0.13)</span><br><span class="line">    84c 164 - b89b0  (0.09)</span><br><span class="line">    400 172 - 5c800  (0.05)</span><br><span class="line">    234 265 - 54684  (0.04)</span><br><span class="line">    1c 2c2e - 4d508  (0.04)</span><br><span class="line">    1c0 287 - 46c40  (0.04)</span><br><span class="line">    c00 4b - 38400  (0.03)</span><br><span class="line">    20 1a12 - 34240  (0.03)</span><br><span class="line">    3bc ce - 30148  (0.02)</span><br><span class="line">    50 8da - 2c420  (0.02)</span><br><span class="line">    800 4c - 26000  (0.02)</span><br><span class="line">    2ba d2 - 23c94  (0.02)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">size     #blocks     total     ( %) (percent of total busy bytes)</span><br><span class="line">14 23acbbe - 2c97ead8  (92.78)</span><br></pre></td></tr></table></figure>
+<p>TOP 20 中显示，最多的一个大小为 0x014 的分配次数为 0x23acbbe 次， 总共大概有700M左右。基本接近内存泄漏的总数。那么我们就需要来确定这个内存是谁申请的。</p>
+<h1 id="定位内存来源"><a href="#定位内存来源" class="headerlink" title="定位内存来源"></a>定位内存来源</h1><p>找到了大量的内存是0x014字节大小的，但是根据这个条件我们也找不到具体的代码啊？下面是几个思路</p>
+<h2 id="思路1-根据大小"><a href="#思路1-根据大小" class="headerlink" title="思路1  根据大小"></a>思路1  根据大小</h2><p>根据内存大小（0x14）去代码中查找大小为（0x14）的类、结构体、宏等等相关代码，然后找到原因。<br>难！！！<br>1）、进程包含了很多其他组的dll，有的我没代码权限，无法遍历<br>2）、结构体、类太多了，人眼遍历太难了（针对这个问题我开发了一个工具，后续章节讲解）</p>
+<h2 id="思路2-内存内容"><a href="#思路2-内存内容" class="headerlink" title="思路2 内存内容"></a>思路2 内存内容</h2><p>显示所有大小为（0x14）内存的地址，看它的地址内容有没有什么特点，比如是否有特殊的字符串、固定的二进制头？？？   显示所有分配大小为 0x14的内存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!heap -flt s 14</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; !heap -flt s 14 </span><br><span class="line">unable to resolve ntdll!RtlpStackTraceDataBase</span><br><span class="line">    _HEAP @ 6f0000</span><br><span class="line">      HEAP_ENTRY Size Prev Flags    UserPtr UserSize - state</span><br><span class="line">        0071c038 0004 0000  [00]   0071c040    00014 - (busy)</span><br><span class="line">        0071c2e8 0004 0004  [00]   0071c2f0    00014 - (busy)</span><br><span class="line">        0071e498 0004 0004  [00]   0071e4a0    00014 - (busy)</span><br><span class="line">        0071e4f8 0004 0004  [00]   0071e500    00014 - (busy)</span><br><span class="line">        0071e518 0004 0004  [00]   0071e520    00014 - (busy)</span><br><span class="line">        0071e5f8 0004 0004  [00]   0071e600    00014 - (busy)</span><br><span class="line">        0071e638 0004 0004  [00]   0071e640    00014 - (busy)</span><br><span class="line">        0071e658 0004 0004  [00]   0071e660    00014 - (busy)</span><br><span class="line">        0071e798 0004 0004  [00]   0071e7a0    00014 - (busy)</span><br><span class="line">        007374f0 0004 0004  [00]   007374f8    00014 - (busy)</span><br><span class="line">        00737510 0004 0004  [00]   00737518    00014 - (busy)</span><br><span class="line">        00737530 0004 0004  [00]   00737538    00014 - (busy)</span><br><span class="line">        00737550 0004 0004  [00]   00737558    00014 - (busy)</span><br><span class="line">        00737570 0004 0004  [00]   00737578    00014 - (busy)</span><br><span class="line">        00737590 0004 0004  [00]   00737598    00014 - (busy)</span><br><span class="line">        007375b0 0004 0004  [00]   007375b8    00014 - (busy)</span><br><span class="line">        007375d0 0004 0004  [00]   007375d8    00014 - (busy)</span><br><span class="line">        007375f0 0004 0004  [00]   007375f8    00014 - (busy)</span><br><span class="line">        00737610 0004 0004  [00]   00737618    00014 - (busy)</span><br><span class="line">        00737630 0004 0004  [00]   00737638    00014 - (busy)</span><br><span class="line">        00737650 0004 0004  [00]   00737658    00014 - (busy)</span><br><span class="line">        00737670 0004 0004  [00]   00737678    00014 - (busy)</span><br><span class="line">        00737690 0004 0004  [00]   00737698    00014 - (busy)</span><br><span class="line">		    ..............</span><br><span class="line">			..............</span><br></pre></td></tr></table></figure>
+<p>随机抽查几个地址，看下地址内存<br><img src="http://91dengdeng.cn/wp-content/uploads/2018/10/5d2f13bab110f9858adade236e77c2bf.png" alt></p>
+<p>大都是这样的值，实在是看不出规律。</p>
+<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h3><p>一般公司都会封装malloc、new函数，并分配一个模块号，每个内存地址头部都会携带id号，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx_malloc(int nModleID,size_t size);</span><br></pre></td></tr></table></figure></p>
+<p>这样通过地址空间内容也可以找到分配的模块。</p>
+<h2 id="思路3-分配次数"><a href="#思路3-分配次数" class="headerlink" title="思路3 分配次数"></a>思路3 分配次数</h2><p>大小0x14的内存在90天时间内总共分配了23acbbe 次， 0x23acbbe = 37407678/(90(天)*24(小时) ≈ 17318次/小时。 这个内存几乎每小时被申请17318次。公司的服务器有个基本功能：每个小时会统计收到的消息次数，那分析下数量级在1w~3w左右的消息即可，大概是4个消息类型，然后通过代码review发现内存泄漏点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if(total_fee)&#123;</span><br><span class="line">    LPADD_FEE pAddFee = new ADD_FEE;</span><br><span class="line">    ZeroMemory(pAddFee, sizeof(ADD_FEE));</span><br><span class="line">    pAddFee-&gt;nFee = total_fee;</span><br><span class="line">    gdt.nTotalFee = total_fee;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结构体 ADD_FEE ,刚好是20字节<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _tagADD_FEE&#123;</span><br><span class="line">    int nFee;</span><br><span class="line">    int nReserved[4];</span><br><span class="line">&#125;ADD_FEE, *LPADD_FEE;</span><br></pre></td></tr></table></figure></p>
+<p>完全符合！！ 问题解决</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这个一个低级错误导致的。为了避免类视问题，引入代码静态检测<br>1）、cppcheck<br>2）、pclint<br>最后选了pclint。配合jenkins，每天凌晨进行代码静态检查，并输出和上个版本的diff文件，下次就不会出现这么低级的问题。</p>
 
       
     </div>
@@ -492,14 +505,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/windbg分析临界区死锁/" rel="next" title="windbg分析临界区死锁">
+                <i class="fa fa-chevron-left"></i> windbg分析临界区死锁
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/踩内存（内存溢出）的异常定位/" rel="prev" title="踩内存（内存溢出）的异常定位">
+                踩内存（内存溢出）的异常定位 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +561,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +649,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#现象"><span class="nav-number">2.</span> <span class="nav-text">现象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备工作"><span class="nav-number">3.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查找堆块"><span class="nav-number">4.</span> <span class="nav-text">查找堆块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看堆块内存百分比"><span class="nav-number">5.</span> <span class="nav-text">查看堆块内存百分比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定位内存来源"><span class="nav-number">6.</span> <span class="nav-text">定位内存来源</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路1-根据大小"><span class="nav-number">6.1.</span> <span class="nav-text">思路1  根据大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路2-内存内容"><span class="nav-number">6.2.</span> <span class="nav-text">思路2 内存内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#建议"><span class="nav-number">6.2.1.</span> <span class="nav-text">建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路3-分配次数"><span class="nav-number">6.3.</span> <span class="nav-text">思路3 分配次数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

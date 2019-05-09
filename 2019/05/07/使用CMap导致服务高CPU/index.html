@@ -96,19 +96,19 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="某天某服务预警一直提示某服务性能不足，cpu已满负荷。很是纳闷，这个服务是纯内存数据，没有io操作；而且都运行了快3个月了，怎么突然就性能不足了？ 步骤1半夜从睡梦中被叫醒，先自己缕一缕思路（整个人都是懵的，基本缕不出思路），先解决线上问题， 让运维保存了一份fulldump，然后重启服务，线上正常，回去睡觉。 异常出现时需要哪些现场信息，比如日志、dump、cpu、内存状态……;因为平时有积累，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="使用CMap导致服务高CPU">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/使用CMap导致服务高CPU/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="某天某服务预警一直提示某服务性能不足，cpu已满负荷。很是纳闷，这个服务是纯内存数据，没有io操作；而且都运行了快3个月了，怎么突然就性能不足了？ 步骤1半夜从睡梦中被叫醒，先自己缕一缕思路（整个人都是懵的，基本缕不出思路），先解决线上问题， 让运维保存了一份fulldump，然后重启服务，线上正常，回去睡觉。 异常出现时需要哪些现场信息，比如日志、dump、cpu、内存状态……;因为平时有积累，">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:image" content="http://91dengdeng.cn/wp-content/uploads/2018/10/8a0fa2ba90b9a72f2e9db807b3fd2345.png">
+<meta property="og:updated_time" content="2019-05-07T11:21:50.469Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="使用CMap导致服务高CPU">
+<meta name="twitter:description" content="某天某服务预警一直提示某服务性能不足，cpu已满负荷。很是纳闷，这个服务是纯内存数据，没有io操作；而且都运行了快3个月了，怎么突然就性能不足了？ 步骤1半夜从睡梦中被叫醒，先自己缕一缕思路（整个人都是懵的，基本缕不出思路），先解决线上问题， 让运维保存了一份fulldump，然后重启服务，线上正常，回去睡觉。 异常出现时需要哪些现场信息，比如日志、dump、cpu、内存状态……;因为平时有积累，">
+<meta name="twitter:image" content="http://91dengdeng.cn/wp-content/uploads/2018/10/8a0fa2ba90b9a72f2e9db807b3fd2345.png">
 
 
 
@@ -116,7 +116,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/使用CMap导致服务高CPU/">
 
 
 
@@ -126,7 +126,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>使用CMap导致服务高CPU | 睡在床板下</title>
   
 
 
@@ -341,7 +341,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/使用CMap导致服务高CPU/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +358,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">使用CMap导致服务高CPU
 
               
             
@@ -384,7 +384,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 19:21:00 / Modified: 19:21:50" itemprop="dateCreated datePublished" datetime="2019-05-07T19:21:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +448,18 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+        <p>某天某服务预警一直提示某服务性能不足，cpu已满负荷。很是纳闷，这个服务是纯内存数据，没有io操作；而且都运行了快3个月了，怎么突然就性能不足了？</p>
+<h2 id="步骤1"><a href="#步骤1" class="headerlink" title="步骤1"></a>步骤1</h2><p>半夜从睡梦中被叫醒，先自己缕一缕思路（整个人都是懵的，基本缕不出思路），先解决线上问题， 让运维保存了一份fulldump，然后重启服务，线上正常，回去睡觉。</p>
+<p>异常出现时需要哪些现场信息，比如日志、dump、cpu、内存状态……;因为平时有积累，比如cpu、内存信息主机是有程序在定时生成的；版本（svn、pdb、exe)是自动化编译自动保存的；……</p>
+<h2 id="步骤2"><a href="#步骤2" class="headerlink" title="步骤2"></a>步骤2</h2><p>向运维取了当时的<a href="https://pan.baidu.com/s/1lJQNlisDTZRoQ_Ez0_1SrA" title="dump文件" target="_blank" rel="noopener">dump文件</a>(提取码: q5kx)，向版本服务器获取了匹配的pdb、svn记录，获取了当时的日志、cpu、内存信息。使用windbg 打开dump，发现是一个64位dump，看来运维偷懒了，没有用之前说的命令行方式获取dump，而是使用任务管理器获取dump。</p>
+<h2 id="步骤3"><a href="#步骤3" class="headerlink" title="步骤3"></a>步骤3</h2><p>加载pdb，将64位dump切换到32位，然后打印所有线程。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; .load wow64exts</span><br><span class="line">0:000&gt; !sw</span><br><span class="line">Switched to 32bit mode</span><br><span class="line">0:000:x86&gt; ~*kv</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">  0  Id: c2c.a4c Suspend: 0 Teb: 7efdb000 Unfrozen</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for ntdll.dll - </span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for kernel32.dll - </span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">0015f260 75dd1194 000000e4 ffffffff 00000000 ntdll_77b80000!NtWaitForSingleObject+0x15</span><br><span class="line">0015f278 75dd1148 000000e4 ffffffff 00000000 kernel32!WaitForSingleObjectEx+0x43</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for sechost.dll - </span><br><span class="line">0015f28c 77717be6 000000e4 ffffffff e15460f0 kernel32!WaitForSingleObject+0x12</span><br><span class="line">0015f330 77718040 0059f808 000000e4 00000000 sechost!I_ScIsSecurityProcess+0x8a7</span><br><span class="line">0015f3e4 77718553 0015f3f8 00000000 00000001 sechost!RegisterServiceCtrlHandlerExA+0x27a</span><br><span class="line">*** WARNING: Unable to verify checksum for kubsvr.exe</span><br><span class="line">0015f3fc 001dd97b 0015f408 0015f438 001dd850 sechost!StartServiceCtrlDispatcherA+0x68</span><br><span class="line">0015f418 001c76ad 7aed560b 0002001d 00000000 kubsvr!CNTService::StartServiceA+0x2b</span><br><span class="line">0015f91c 001de205 00000001 005938e0 0058cc28 kubsvr!main+0x28d (FPO: [Non-Fpo]) (CONV: cdecl) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\kubsvr\main.cpp @ 165]</span><br><span class="line">0015f95c 75dd338a 7efde000 0015f9a8 77bb9902 kubsvr!__tmainCRTStartup+0xfd (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c @ 626]</span><br><span class="line">0015f968 77bb9902 7efde000 ec718eae 00000000 kernel32!BaseThreadInitThunk+0x12</span><br><span class="line">0015f9a8 77bb98d5 001de26d 7efde000 ffffffff ntdll_77b80000!RtlInitializeExceptionChain+0x63</span><br><span class="line">0015f9c0 00000000 001de26d 7efde000 00000000 ntdll_77b80000!RtlInitializeExceptionChain+0x36</span><br><span class="line"></span><br><span class="line">   1  Id: c2c.dfc Suspend: 0 Teb: 7ef9d000 Unfrozen</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for user32.dll - </span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">0265fef4 001cf23b 0265ff0c 00000000 00000000 user32!DispatchMessageW+0x5c</span><br><span class="line">0265ff2c 001dd91d 00000000 005a6b00 00000000 kubsvr!CMainService::Run+0x4b (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\kubsvr\service.cpp @ 68]</span><br><span class="line">0265ff4c 777175a8 00000001 005a6b10 00000000 kubsvr!CNTService::ServiceMain+0xcd</span><br><span class="line">0265ff60 75dd338a 005a6b00 0265ffac 77bb9902 sechost!I_ScIsSecurityProcess+0x269</span><br><span class="line">0265ff6c 77bb9902 005a6b00 ee0188aa 00000000 kernel32!BaseThreadInitThunk+0x12</span><br><span class="line">0265ffac 77bb98d5 77717587 005a6b00 ffffffff ntdll_77b80000!RtlInitializeExceptionChain+0x63</span><br><span class="line">0265ffc4 00000000 77717587 005a6b00 00000000 ntdll_77b80000!RtlInitializeExceptionChain+0x36</span><br><span class="line">........................</span><br><span class="line">........................</span><br></pre></td></tr></table></figure>
+<h2 id="步骤4"><a href="#步骤4" class="headerlink" title="步骤4"></a>步骤4</h2><p>分析各个线程。从线程中可以看到总共有24个线程，其中有部分能看到代码，有部分不能看到代码。我们只能先从有代码的线程开始分析，因为这部分线程才是自己程序的主要处理模块。<br>可以看到大多线程都在处理 CSockServer::OnPlayerLogon 函数，查看对应的代码，理了下大概逻辑：服务程序使用8个线程接收用户登陆请求，并将用户信息保存在一个全局CMap中，CMay的key是用户id，value是一个类。这个dump线程反应出来的就是当时在处理很多用户的登陆信息，没有什么异常点啊？？？？ 当时就觉的碰到坎了，认为导的dump可能不是引起cpu高时的运行栈， 后悔应该让运维多导几个dump，通过比较应该找的到高cpu时线程运行栈。<br>暂时没辙就打开看下当时的参数信息，慢慢的就看到了CMap的大小</p>
+<h3 id="切换到9号线程"><a href="#切换到9号线程" class="headerlink" title="切换到9号线程"></a>切换到9号线程</h3><p>~9s<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">0:009:x86&gt; kv</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">0377f87c 001b3a7d 0addba3c 0377f898 0377f890 kubsvr!CMap&lt;int,int,_tagPLAYER_LOGON_MINI,_tagPLAYER_LOGON_MINI &amp;&gt;::GetAssocAt+0x61 (FPO: [Non-Fpo]) (CONV: thiscall) [c:\program files (x86)\microsoft visual studio 12.0\vc\atlmfc\include\afxtempl.h @ 1542]</span><br><span class="line">0377f8a8 001bad38 0addba3c 005a1a58 200d99a8 kubsvr!CMap&lt;int,int,_tagPLAYER_LOGON_MINI,_tagPLAYER_LOGON_MINI &amp;&gt;::operator[]+0x1d (FPO: [Non-Fpo]) (CONV: thiscall) [c:\program files (x86)\microsoft visual studio 12.0\vc\atlmfc\include\afxtempl.h @ 1589]</span><br><span class="line">0377f8c0 001b7a53 0addba3c 0377f8e0 798f5637 kubsvr!CMap&lt;int,int,_tagPLAYER_LOGON_MINI,_tagPLAYER_LOGON_MINI &amp;&gt;::SetAt+0x18 (FPO: [Non-Fpo]) (CONV: thiscall) [c:\program files (x86)\microsoft visual studio 12.0\vc\atlmfc\include\afxtempl.h @ 1349]</span><br><span class="line">0377f920 001cfc90 1c8d1540 2008cb20 00593ee8 kubsvr!CSockServer::OnPlayerLogon+0xb3 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\kubsvr\folder.cpp @ 1602]</span><br><span class="line">0377f950 001d1904 1c8d1540 2008cb20 005a1a60 kubsvr!CSockServer::OnRequest+0x660 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\kubsvr\socksvr.cpp @ 166]</span><br><span class="line">0377f978 001d818b 00000000 005be950 005bd800 kubsvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">0377f990 001d815b 0377f9d0 7347c01d 005a1a58 kubsvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">0377f998 7347c01d 005a1a58 e2366994 00000000 kubsvr!CBaseWorker::WorkerThreadFunc+0xb</span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">0377f9d0 7347c001 00000000 0377f9e8 75dd338a MSVCR120!_get_flsindex+0x6f</span><br><span class="line">0377f9dc 75dd338a 005bd800 0377fa28 77bb9902 MSVCR120!_get_flsindex+0x53</span><br><span class="line">0377f9e8 77bb9902 005bd800 ef138d2e 00000000 kernel32!BaseThreadInitThunk+0x12</span><br><span class="line">0377fa28 77bb98d5 7347bfb4 005bd800 ffffffff ntdll_77b80000!RtlInitializeExceptionChain+0x63</span><br><span class="line">0377fa40 00000000 7347bfb4 005bd800 00000000 ntdll_77b80000!RtlInitializeExceptionChain+0x36</span><br></pre></td></tr></table></figure></p>
+<p>打开windbg菜单“view”中的“local”、“calls”<br><img src="http://91dengdeng.cn/wp-content/uploads/2018/10/8a0fa2ba90b9a72f2e9db807b3fd2345.png" alt></p>
+<p>可以看到CMap的m_nCount = 0n770036,放置了大约70w用户，调用CMap.SetAt()。难道SetAt性能不好？？  由于是前人的历史代码，我对CMap基本不熟悉，所以就抱着这个疑问写了个demo进行验证，果然，在CMap达到40w左右时，SetAt性能急剧下降，到70w左右插入可能需要10秒的时间。更换了std::map ，长期观察程序很稳定。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>在分析高cpu时有几个操作不对的地方，<br>1）运维没有使用命令行保存fulldump<br>2）没有让运维多导几个fulldump<br>3）CMap性能差真没想到，吃一堑长一智，看来都得用std::map 才行</p>
+<h2 id="后续的任务"><a href="#后续的任务" class="headerlink" title="后续的任务"></a>后续的任务</h2><p>1）写了个工具给运维可以正确导32位进程dump<br>2）全部门代码替换CMap为std::map</p>
 
       
     </div>
@@ -492,14 +490,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/捕获异常并自动保存dump/" rel="next" title="捕获异常并自动保存dump">
+                <i class="fa fa-chevron-left"></i> 捕获异常并自动保存dump
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/异常引起的死锁/" rel="prev" title="异常引起的死锁">
+                异常引起的死锁 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +546,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +634,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1"><span class="nav-number">1.</span> <span class="nav-text">步骤1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2"><span class="nav-number">2.</span> <span class="nav-text">步骤2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3"><span class="nav-number">3.</span> <span class="nav-text">步骤3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤4"><span class="nav-number">4.</span> <span class="nav-text">步骤4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#切换到9号线程"><span class="nav-number">4.1.</span> <span class="nav-text">切换到9号线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">5.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续的任务"><span class="nav-number">6.</span> <span class="nav-text">后续的任务</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

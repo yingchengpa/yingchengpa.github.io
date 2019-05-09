@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh_Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="介绍多线程编程中，对于资源同步导致的死锁问题，应该是开发过程中经常碰到的，同时在问题定位过程中也会花费大量的时间，这里就介绍下如何通过windbg来分析死锁问题。 资源同步windows下资源同步的方法主要是  原子访问 临界区 读写锁 旋转锁 等待函数 事件 信号量 互斥量  其中最常用的应该是临界区了（性能开销小），所以我也是拿临界区作为分析对象，其他资源同步不在此讨论。 临界区保证在某一时刻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windbg分析临界区死锁">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/windbg分析临界区死锁/index.html">
+<meta property="og:site_name" content="睡在床板下">
+<meta property="og:description" content="介绍多线程编程中，对于资源同步导致的死锁问题，应该是开发过程中经常碰到的，同时在问题定位过程中也会花费大量的时间，这里就介绍下如何通过windbg来分析死锁问题。 资源同步windows下资源同步的方法主要是  原子访问 临界区 读写锁 旋转锁 等待函数 事件 信号量 互斥量  其中最常用的应该是临界区了（性能开销小），所以我也是拿临界区作为分析对象，其他资源同步不在此讨论。 临界区保证在某一时刻">
+<meta property="og:locale" content="zh_Hans">
+<meta property="og:updated_time" content="2019-05-07T11:23:30.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="windbg分析临界区死锁">
+<meta name="twitter:description" content="介绍多线程编程中，对于资源同步导致的死锁问题，应该是开发过程中经常碰到的，同时在问题定位过程中也会花费大量的时间，这里就介绍下如何通过windbg来分析死锁问题。 资源同步windows下资源同步的方法主要是  原子访问 临界区 读写锁 旋转锁 等待函数 事件 信号量 互斥量  其中最常用的应该是临界区了（性能开销小），所以我也是拿临界区作为分析对象，其他资源同步不在此讨论。 临界区保证在某一时刻">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/windbg分析临界区死锁/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>windbg分析临界区死锁 | 睡在床板下</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh_Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">睡在床板下</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">世事多变，我心中自有主见</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/windbg分析临界区死锁/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">windbg分析临界区死锁
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-07 19:22:00 / Modified: 19:23:30" itemprop="dateCreated datePublished" datetime="2019-05-07T19:22:00+08:00">2019-05-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>多线程编程中，对于资源同步导致的死锁问题，应该是开发过程中经常碰到的，同时在问题定位过程中也会花费大量的时间，这里就介绍下如何通过windbg来分析死锁问题。</p>
+<h1 id="资源同步"><a href="#资源同步" class="headerlink" title="资源同步"></a>资源同步</h1><p>windows下资源同步的方法主要是</p>
+<ul>
+<li>原子访问</li>
+<li>临界区</li>
+<li>读写锁</li>
+<li>旋转锁</li>
+<li>等待函数</li>
+<li>事件</li>
+<li>信号量</li>
+<li>互斥量</li>
+</ul>
+<p>其中最常用的应该是临界区了（性能开销小），所以我也是拿临界区作为分析对象，其他资源同步不在此讨论。</p>
+<h1 id="临界区"><a href="#临界区" class="headerlink" title="临界区"></a>临界区</h1><p>保证在某一时刻只有一个线程能访问数据的简便办法。在任意时刻只允许一个线程对共享资源进行访问。如果有多个线程试图同时访问临界区，那么 在有一个线程进入后其他所有试图访问此临界区的线程将被挂起，并一直持续到进入临界区的线程离开。临界区在被释放后，其他线程可以继续抢占，并以此达到用原子方式操 作共享资源的目的。<br>临界区包含两个操作原语：<br>EnterCriticalSection（） 进入临界区<br>LeaveCriticalSection（） 离开临界区<br>EnterCriticalSection（） 语句执行后代码将进入临界区以后无论发生什么，必须确保与之匹配的 LeaveCriticalSection（）都能够被执行到。否则临界区保护的共享资源将永远不会被释放。虽然临界区同步速度很快，但却只能用来同步本 进程内的线程，而不可用来同步多个进程中的线程。</p>
+<h2 id="结构体定义"><a href="#结构体定义" class="headerlink" title="结构体定义"></a>结构体定义</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">RTL_CRITICAL_SECTION</span> &#123;</span></span><br><span class="line">	PRTL_CRITICAL_SECTION_DEBUG DebugInfo;</span><br><span class="line">	LONG LockCount;</span><br><span class="line">	LONG RecursionCount;</span><br><span class="line">	HANDLE OwningThread;</span><br><span class="line">	HANDLE LockSemaphore;</span><br><span class="line">	ULONG_PTR SpinCount;</span><br><span class="line">&#125; RTL_CRITICAL_SECTION, *PRTL_CRITICAL_SECTION;</span><br></pre></td></tr></table></figure>
+<p>各个参数的解释如下：<br>第一个参数：PRTL_CRITICAL_SECTION_DEBUG DebugInfo;//调试用的<br>第二个参数：LONG LockCount;//初始化为-1，n表示有n个线程在等待<br>第三个参数：LONG RecursionCount;//表示该临界区的拥有线程对此资源获得临界区次数，初为0<br>第四个参数：HANDLE OwningThread;//即拥有该临界区的线程句柄<br>第五个参数：HANDLE LockSemaphore;//实际上是一个自复位事件<br>第六个参数：DWORD SpinCount;//旋转锁的设置，单CPU下忽略</p>
+<p>由这个结构可以知道：临界区会记录拥有该临界区的线程句柄，即临界区是有“线程所有权”概念的。事实上它会用第四个参数OwningThread来记录获准进入临界区的线程句柄，如果这个线程再次进入，EnterCriticalSection()会更新第三个参数RecursionCount以记录该线程进入的次数并立即返回让该线程进入。其它线程调用EnterCriticalSection()则会被切换到等待状态，一旦拥有线程所有权的线程调用LeaveCriticalSection()使其进入的次数为0时，系统会自动更新临界区并将等待中的线程换回可调度状态。</p>
+<h1 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h1><p>服务器工作线程每5s会定时上报当前还有多少消息堆积未处理，正常情况应该都是&lt;=10左右。如果出现cpu不足、io、死锁、假死等问题导致工作线程无法正常消费，那么消息堆积数量会逐渐上升。某天在告警群里面提示某服务的消息堆积从100、400、1000、3000、5000 逐渐上升，第一感觉就是服务出问题了，立刻让运维查看服务器cpu、内存、io，均正常，而且同物理主机的其他服务正常运行，所以问题应该是该服务程序出现了某些状况，可能是死锁、也可能是死循环、也可能是长时间sleep….. 立刻保存fulldump，然后重启服务，先恢复线上服务，以免给客户带来更大损失。</p>
+<h1 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h1><h2 id="下载dump"><a href="#下载dump" class="headerlink" title="下载dump"></a>下载dump</h2><p><a href="https://pan.baidu.com/s/1I85jYQUtGEzmgOyacIn11Q" title="下载地址" target="_blank" rel="noopener">下载地址</a>(提取码：33lg)</p>
+<h2 id="步骤1"><a href="#步骤1" class="headerlink" title="步骤1"></a>步骤1</h2><p>使用windbg 打开dump，并设置好pdb、操作系统pdb；<br>使用命令 “~*kv” 显示所有线程当前的函数调用栈，效果如下（大部分省略）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">0:021&gt; ~*kv</span><br><span class="line"></span><br><span class="line">   0  Id: 173c.16d8 Suspend: 3 Teb: 7efdd000 Unfrozen</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">0035b6b8 775514ab 000000d0 00000000 00000000 ntdll!NtWaitForSingleObject+0x15 (FPO: [3,0,0])</span><br><span class="line">0035b724 77441194 000000d0 ffffffff 00000000 KERNELBASE!WaitForSingleObjectEx+0x98 (FPO: [Non-Fpo])</span><br><span class="line">0035b73c 77441148 000000d0 ffffffff 00000000 kernel32!WaitForSingleObjectExImplementation+0x75 (FPO: [Non-Fpo])</span><br><span class="line">0035b750 75777be6 000000d0 ffffffff 0e9c9dd4 kernel32!WaitForSingleObject+0x12 (FPO: [Non-Fpo])</span><br><span class="line">0035b7f4 75778040 0070b1b8 000000d0 00000000 sechost!ScSendResponseReceiveControls+0xea (FPO: [Non-Fpo])</span><br><span class="line">0035b8a8 75778553 0035b8bc 00000000 00000001 sechost!ScDispatcherLoop+0xc2 (FPO: [Non-Fpo])</span><br><span class="line">*** WARNING: Unable to verify checksum for MatchSvr.exe</span><br><span class="line">0035b8c0 012432cb 0035b8cc 0035b938 012431a0 sechost!StartServiceCtrlDispatcherA+0x68 (FPO: [Non-Fpo])</span><br><span class="line">0035b8dc 01218689 fc7e3c0d 00000000 00000001 MatchSvr!CNTService::StartServiceA+0x2b</span><br><span class="line">0035f928 01253f2a 00000001 00708280 006ff620 MatchSvr!main+0x139 (FPO: [Non-Fpo]) (CONV: cdecl) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\main.cpp @ 190]</span><br><span class="line">0035f968 7744338a 7efde000 0035f9b4 77bf9f72 MatchSvr!__tmainCRTStartup+0xfd (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c @ 626]</span><br><span class="line">0035f974 77bf9f72 7efde000 85371315 00000000 kernel32!BaseThreadInitThunk+0xe (FPO: [Non-Fpo])</span><br><span class="line">0035f9b4 77bf9f45 01253f92 7efde000 ffffffff ntdll!__RtlUserThreadStart+0x70 (FPO: [Non-Fpo])</span><br><span class="line">0035f9cc 00000000 01253f92 7efde000 00000000 ntdll!_RtlUserThreadStart+0x1b (FPO: [Non-Fpo])</span><br><span class="line"></span><br><span class="line">   1  Id: 173c.290 Suspend: 3 Teb: 7ef9f000 Unfrozen</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">02aef948 76fa7c1d 02aef9cc 00000000 00000000 user32!NtUserGetMessage+0x15 (FPO: [4,0,0])</span><br><span class="line">02aef968 0122d9ad 02aef9cc 00000000 00000000 user32!GetMessageA+0xa1 (FPO: [Non-Fpo])</span><br><span class="line">02aef9ec 0124326d 00000000 00712b08 00000000 MatchSvr!CMainService::Run+0x7d (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\service.cpp @ 65]</span><br><span class="line">02aefa0c 757775a8 00000001 00712b18 00000000 MatchSvr!CNTService::ServiceMain+0xcd</span><br></pre></td></tr></table></figure>
+<h2 id="步骤2"><a href="#步骤2" class="headerlink" title="步骤2"></a>步骤2</h2><p>观察所有线程的函数调用。 这个服务并不复杂，总共只有二十几个线程（以前分析的都是至少100个线程的dump），然后重点查看服务进程的主要工作线程（是因为工作线程不工作才导致消息堆积）。</p>
+<p>这个服务的工作线程有4个分别是10、11、12、13， 至于怎么确定的？<br>1、看日志。良好的编码习惯，程序中的每个线程启动、退出都会在日志中记录<br>2、对代码逻辑的熟悉</p>
+<h2 id="步骤3"><a href="#步骤3" class="headerlink" title="步骤3"></a>步骤3</h2><p>切换到其中任意一个工作线程，比如10号线程<br><code>~10s</code><br><code>kv</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">0:010&gt; ~10s</span><br><span class="line">eax=00000000 ebx=03020f70 ecx=00000000 edx=00000000 esi=7fffffff edi=ffffffff</span><br><span class="line">eip=77bdf8d1 esp=03bcf10c ebp=03bcf14c iopl=0         nv up ei pl zr na pe nc</span><br><span class="line">cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246</span><br><span class="line">ntdll!NtWaitForSingleObject+0x15:</span><br><span class="line">77bdf8d1 83c404          add     esp,4</span><br><span class="line">0:010&gt; kv</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">03bcf10c 74a06f1f 00000330 00000001 03bcf134 ntdll!NtWaitForSingleObject+0x15 (FPO: [3,0,0])</span><br><span class="line">03bcf14c 74a06d40 00000330 000001a4 00000001 mswsock!SockWaitForSingleObject+0x1ba (FPO: [Non-Fpo])</span><br><span class="line">03bcf238 75796a28 000001a5 00000000 03bcf2ec mswsock!WSPSelect+0x3a6 (FPO: [Non-Fpo])</span><br><span class="line">03bcf2b8 744d7787 000001a5 00000000 03bcf2ec ws2_32!select+0x494 (FPO: [Non-Fpo])</span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">03bcf3f4 744d75f0 000001a4 00000004 ffffffff rabbitmq_4!amqp_open_socket+0x347</span><br><span class="line">03bcf600 744d76ca 00720ae8 000021e0 ffffffff rabbitmq_4!amqp_open_socket+0x1b0</span><br><span class="line">03bcf620 744d9693 00720ae8 000021e0 00000000 rabbitmq_4!amqp_open_socket+0x28a</span><br><span class="line">03bcf638 744d7e26 0497bdc8 00720ae8 000021e0 rabbitmq_4!amqp_parse_url+0x3c3</span><br><span class="line">03bcf650 01250550 0497bdc8 00720ae8 000021e0 rabbitmq_4!amqp_socket_open+0x16</span><br><span class="line">03bcf728 01250e97 fff73d65 0070b3d8 071ca950 MatchSvr!CRabbitMQ::connect+0xd0</span><br><span class="line">03bcf840 01250870 0071ecf4 0071ecc4 03bcfa28 MatchSvr!CRabbitMQ::_publish_str_+0x187</span><br><span class="line">03bcf8a4 01250100 0071ecf4 0071ecc4 03bcfa28 MatchSvr!CRabbitMQ::sendmsg+0x20</span><br><span class="line">03bcf908 01218d48 0071ecf4 0071ecc4 03bcfa28 MatchSvr!CRabbitmqProc::sendmsg+0x20</span><br><span class="line">03bcf96c 01231fbc 03bcfa28 fff7382d 0070b3d8 MatchSvr!CProducerMQ::RabbitMQPublish_log+0x28 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\producermq.cpp @ 62]</span><br><span class="line">03bcfd08 0122eb98 071cae70 08c6c368 007022a8 MatchSvr!CSockServer::OnGameUserArenaResult+0xc3c (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\socksvr.cpp @ 1096]</span><br><span class="line">03bcfda4 012392e4 071cae70 08c6c368 0070b3e0 MatchSvr!CSockServer::OnRequest+0x718 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\socksvr.cpp @ 309]</span><br><span class="line">03bcfdcc 0123d1bb 00000000 00715868 007141b8 MatchSvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">03bcfde4 0123d18b 03bcfe24 70ffc01d 0070b3d8 MatchSvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">03bcfdec 70ffc01d 0070b3d8 0d15d467 00000000 MatchSvr!CBaseWorker::WorkerThreadFunc+0xb</span><br><span class="line">03bcfe24 70ffc001 00000000 03bcfe3c 7744338a msvcr120!_callthreadstartex+0x1b (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 376]</span><br><span class="line">03bcfe30 7744338a 007141b8 03bcfe7c 77bf9f72 msvcr120!_threadstartex+0x7c (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 354]</span><br><span class="line">03bcfe3c 77bf9f72 007141b8 86be14dd 00000000 kernel32!BaseThreadInitThunk+0xe (FPO: [Non-Fpo])</span><br><span class="line">03bcfe7c 77bf9f45 70ffbfb4 007141b8 ffffffff ntdll!__RtlUserThreadStart+0x70 (FPO: [Non-Fpo])</span><br><span class="line">03bcfe94 00000000 70ffbfb4 007141b8 00000000 ntdll!_RtlUserThreadStart+0x1b (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure></p>
+<p>从中，我们看到调用栈并没有什么问题，大概意思就是收到了一个GameUserArenaResult消息，然后通过mq publish出去，然后mq模块正在进行connect。感觉没有问题，接着看11号线程</p>
+<p><code>~11s</code><br><code>kv</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">0:010&gt; ~11s</span><br><span class="line">eax=00000001 ebx=00000000 ecx=00000000 edx=00000000 esi=007124f8 edi=00000000</span><br><span class="line">eip=77bdf8d1 esp=03ccf4cc ebp=03ccf530 iopl=0         nv up ei pl zr na pe nc</span><br><span class="line">cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246</span><br><span class="line">ntdll!NtWaitForSingleObject+0x15:</span><br><span class="line">77bdf8d1 83c404          add     esp,4</span><br><span class="line">0:011&gt; kv</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">03ccf4cc 77bf8e44 00000e0c 00000000 00000000 ntdll!NtWaitForSingleObject+0x15 (FPO: [3,0,0])</span><br><span class="line">03ccf530 77bf8d28 00000000 00000000 0070b3e0 ntdll!RtlpWaitOnCriticalSection+0x13e (FPO: [Non-Fpo])</span><br><span class="line">03ccf558 01216e48 007124f8 0070b3d8 030c7658 ntdll!RtlEnterCriticalSection+0x150 (FPO: [Non-Fpo])</span><br><span class="line">03ccf5b4 0121525e 0070b3d8 030c7658 0070b3e0 MatchSvr!JMutex::Lock+0x28 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\jmutex.cpp @ 71]</span><br><span class="line">03ccf60c 01214b6a 007124f8 ff873359 0070b3d8 MatchSvr!JMutexAutoLock::JMutexAutoLock+0x1e (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\jmutexautolock.h @ 39]</span><br><span class="line">03ccf67c 01231c00 03ccf790 ff873f3d 0070b3d8 MatchSvr!CDelaySendMsg::AddMsg+0x3a (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\delaysendmsg.cpp @ 14]</span><br><span class="line">03ccfa18 0122eb98 05ebbe68 088d7790 00702348 MatchSvr!CSockServer::OnGameUserArenaResult+0x880 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\socksvr.cpp @ 1071]</span><br><span class="line">03ccfab4 012392e4 05ebbe68 088d7790 0070b3e0 MatchSvr!CSockServer::OnRequest+0x718 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\socksvr.cpp @ 309]</span><br><span class="line">03ccfadc 0123d1bb 00000000 00715ff8 007154a0 MatchSvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">03ccfaf4 0123d18b 03ccfb34 70ffc01d 0070b3d8 MatchSvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">03ccfafc 70ffc01d 0070b3d8 0d65d177 00000000 MatchSvr!CBaseWorker::WorkerThreadFunc+0xb</span><br><span class="line">03ccfb34 70ffc001 00000000 03ccfb4c 7744338a msvcr120!_callthreadstartex+0x1b (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 376]</span><br><span class="line">03ccfb40 7744338a 007154a0 03ccfb8c 77bf9f72 msvcr120!_threadstartex+0x7c (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 354]</span><br><span class="line">03ccfb4c 77bf9f72 007154a0 86ce112d 00000000 kernel32!BaseThreadInitThunk+0xe (FPO: [Non-Fpo])</span><br><span class="line">03ccfb8c 77bf9f45 70ffbfb4 007154a0 ffffffff ntdll!__RtlUserThreadStart+0x70 (FPO: [Non-Fpo])</span><br><span class="line">03ccfba4 00000000 70ffbfb4 007154a0 00000000 ntdll!_RtlUserThreadStart+0x1b (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure>
+<p>这个堆栈就有意思了，大概就是收到了OnGameUserArenaResult消息，然后AddMsg，进入一个AutoLock，然后RtlEnterCriticalSection，看到这个说明很可能有死锁问题。我们继续观察这个临界区的具体信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">03ccf558 01216e48 007124f8 0070b3d8 030c7658 ntdll!RtlEnterCriticalSection+0x150 (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure></p>
+<p>注意其中的第三列、第四列、第五列， 分别代表了这个函数的第一个入参、第二个入参、第三个入参， 之前看过临界区的结构体，所以使用以下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!cs 007124f8</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0:011&gt; !cs 007124f8</span><br><span class="line">-----------------------------------------</span><br><span class="line">Critical section   = 0x007124f8 (+0x7124F8)</span><br><span class="line">DebugInfo          = 0x007184b8</span><br><span class="line">LOCKED</span><br><span class="line">LockCount          = 0x2</span><br><span class="line">WaiterWoken        = No</span><br><span class="line">OwningThread       = 0x00001188</span><br><span class="line">RecursionCount     = 0x1</span><br><span class="line">LockSemaphore      = 0xE0C</span><br><span class="line">SpinCount          = 0x00000000</span><br></pre></td></tr></table></figure>
+<p>这个临界区正在被 0x00001188 的线程占用，所以导致11s线程无法进入临界区，那么我们就去 0x00001188 线程在做什么。<br>通过线程id显示线程号命令<br><code>~~[0x00001188]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0:011&gt; ~~[0x00001188]</span><br><span class="line">   4  Id: 173c.1188 Suspend: 3 Teb: 7ef96000 Unfrozen</span><br><span class="line">      Start: msvcr120!_threadstartex (70ffbfb4) </span><br><span class="line">      Priority: 0  Priority class: 32  Affinity: 3</span><br></pre></td></tr></table></figure></p>
+<p>4号线程，然后我们切换<br><code>~4s</code><br><code>kv</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">0:004&gt; kv</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">02fdf4b0 77bf8e44 00000dcc 00000000 00000000 ntdll!NtWaitForSingleObject+0x15 (FPO: [3,0,0])</span><br><span class="line">02fdf514 77bf8d28 00000000 00000000 00713298 ntdll!RtlpWaitOnCriticalSection+0x13e (FPO: [Non-Fpo])</span><br><span class="line">02fdf53c 01253666 00720b68 00000000 00713df0 ntdll!RtlEnterCriticalSection+0x150 (FPO: [Non-Fpo])</span><br><span class="line">02fdf598 0125232e 00000000 00713df0 00713298 MatchSvr!CJMutex::Lock+0x26</span><br><span class="line">02fdf5f0 01250d6a 00720b68 feb63229 00000000 MatchSvr!CJAutoLock::CJAutoLock+0x1e</span><br><span class="line">02fdf70c 01250870 0071ecf4 0071ecdc 061b729c MatchSvr!CRabbitMQ::_publish_str_+0x5a</span><br><span class="line">02fdf770 01250100 0071ecf4 0071ecdc 061b729c MatchSvr!CRabbitMQ::sendmsg+0x20</span><br><span class="line">02fdf7d4 01218d88 0071ecf4 0071ecdc 061b729c MatchSvr!CRabbitmqProc::sendmsg+0x20</span><br><span class="line">02fdf838 01214ccd 061b729c feb63ded 00000000 MatchSvr!CProducerMQ::RabbitMQPublish_Award+0x28 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\producermq.cpp @ 72]</span><br><span class="line">02fdf8c8 012172b9 00000000 00713df0 00713298 MatchSvr!CDelaySendMsg::Thread+0x11d (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\delaysendmsg.cpp @ 46]</span><br><span class="line">02fdf924 70ffc01d 007124a0 0c54d31f 00000000 MatchSvr!JThread::TheThread+0x39 (FPO: [Non-Fpo]) (CONV: stdcall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\matchsvr\jthread.cpp @ 175]</span><br><span class="line">02fdf95c 70ffc001 00000000 02fdf974 7744338a msvcr120!_callthreadstartex+0x1b (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 376]</span><br><span class="line">02fdf968 7744338a 00713298 02fdf9b4 77bf9f72 msvcr120!_threadstartex+0x7c (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 354]</span><br><span class="line">02fdf974 77bf9f72 00713298 87ff1315 00000000 kernel32!BaseThreadInitThunk+0xe (FPO: [Non-Fpo])</span><br><span class="line">02fdf9b4 77bf9f45 70ffbfb4 00713298 ffffffff ntdll!__RtlUserThreadStart+0x70 (FPO: [Non-Fpo])</span><br><span class="line">02fdf9cc 00000000 70ffbfb4 00713298 00000000 ntdll!_RtlUserThreadStart+0x1b (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure></p>
+<p>4号线程MQ正在publish一个消息，而这个消息中有一个临界区，这个临界区可能又正在被其他线程占用。 继续查看临界区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0:004&gt; !cs 00720b68 </span><br><span class="line">-----------------------------------------</span><br><span class="line">Critical section   = 0x00720b68 (+0x720B68)</span><br><span class="line">DebugInfo          = 0x0071e070</span><br><span class="line">LOCKED</span><br><span class="line">LockCount          = 0x3</span><br><span class="line">WaiterWoken        = No</span><br><span class="line">OwningThread       = 0x00001590</span><br><span class="line">RecursionCount     = 0x2</span><br><span class="line">LockSemaphore      = 0xDCC</span><br><span class="line">SpinCount          = 0x00000000</span><br></pre></td></tr></table></figure></p>
+<p>这个临界区正在被0x00001590 线程占用，再看看这个线程号是多少<br><code>~~[0x00001590]</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0:004&gt; ~~[0x00001590]</span><br><span class="line">  10  Id: 173c.1590 Suspend: 3 Teb: 7ef81000 Unfrozen</span><br><span class="line">      Start: msvcr120!_threadstartex (70ffbfb4) </span><br><span class="line">      Priority: 0  Priority class: 32  Affinity: 3</span><br></pre></td></tr></table></figure></p>
+<p>？？？？  怎么又回到10号线程了， 再仔细看看10s线程<br>之前我们看的时候觉的没问题，但这里肯定是有问题的，会不会’connect’ 阻塞了呢? 带着疑问查看了下消息堆积时段的日志，有MQ断开的日志。带着猜测自己重现现场试试看，在本地启动服务，然后重启mq服务，发现问题必现。<br>解决方法就是使用非阻塞式的connect函数，问题解决。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里介绍了几个windbg的常用命令，讲解了死锁的一般分析方法，对于这类问题更多的是观察、思考。希望能带给你帮助，如果觉的有用，请帮忙打赏下吧！后续还有一些有意思的dump来分享，比如内存泄漏、死锁+崩溃、踩内存、高cpu等。现在的dump素材没有以前的多了，不然我可以把很多案例都写出来，有些问题没有案例还是挺难讲的。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/07/异常引起的死锁/" rel="next" title="异常引起的死锁">
+                <i class="fa fa-chevron-left"></i> 异常引起的死锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/07/windbg分析内存泄漏/" rel="prev" title="windbg分析内存泄漏">
+                windbg分析内存泄漏 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">睡在床板下</p>
+              <div class="site-description motion-element" itemprop="description">世事多变，我心中自有主见</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.jianshu.com/u/d459b1e37f2e" title="简书 &rarr; https://www.jianshu.com/u/d459b1e37f2e" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#资源同步"><span class="nav-number">2.</span> <span class="nav-text">资源同步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#临界区"><span class="nav-number">3.</span> <span class="nav-text">临界区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结构体定义"><span class="nav-number">3.1.</span> <span class="nav-text">结构体定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题出现"><span class="nav-number">4.</span> <span class="nav-text">问题出现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析过程"><span class="nav-number">5.</span> <span class="nav-text">分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载dump"><span class="nav-number">5.1.</span> <span class="nav-text">下载dump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1"><span class="nav-number">5.2.</span> <span class="nav-text">步骤1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2"><span class="nav-number">5.3.</span> <span class="nav-text">步骤2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3"><span class="nav-number">5.4.</span> <span class="nav-text">步骤3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">睡在床板下</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

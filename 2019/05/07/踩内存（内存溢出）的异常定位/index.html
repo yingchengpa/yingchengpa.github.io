@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="介绍某天晚上11点，钉钉预警提示某服务catch到一个异常导致服务重启，因为是上线了一个多月的服务，半夜遇到这样的问题，整个人有点懵，立刻打开电脑下载dump文件进行分析，不幸的是在分析的过程中，又连续的出现了几次崩溃，在这么反复崩溃、重启折腾了1小时左右，服务终于正常了。 分析dump下载路径：链接：https://pan.baidu.com/s/1GPzzipmxWyIr5WKNq11pIQ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="踩内存（内存溢出）的异常定位">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/踩内存（内存溢出）的异常定位/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="介绍某天晚上11点，钉钉预警提示某服务catch到一个异常导致服务重启，因为是上线了一个多月的服务，半夜遇到这样的问题，整个人有点懵，立刻打开电脑下载dump文件进行分析，不幸的是在分析的过程中，又连续的出现了几次崩溃，在这么反复崩溃、重启折腾了1小时左右，服务终于正常了。 分析dump下载路径：链接：https://pan.baidu.com/s/1GPzzipmxWyIr5WKNq11pIQ">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-07T11:25:22.126Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="踩内存（内存溢出）的异常定位">
+<meta name="twitter:description" content="介绍某天晚上11点，钉钉预警提示某服务catch到一个异常导致服务重启，因为是上线了一个多月的服务，半夜遇到这样的问题，整个人有点懵，立刻打开电脑下载dump文件进行分析，不幸的是在分析的过程中，又连续的出现了几次崩溃，在这么反复崩溃、重启折腾了1小时左右，服务终于正常了。 分析dump下载路径：链接：https://pan.baidu.com/s/1GPzzipmxWyIr5WKNq11pIQ">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/踩内存（内存溢出）的异常定位/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>踩内存（内存溢出）的异常定位 | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/踩内存（内存溢出）的异常定位/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">踩内存（内存溢出）的异常定位
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 19:25:00 / Modified: 19:25:22" itemprop="dateCreated datePublished" datetime="2019-05-07T19:25:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +446,33 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>某天晚上11点，钉钉预警提示某服务catch到一个异常导致服务重启，因为是上线了一个多月的服务，半夜遇到这样的问题，整个人有点懵，立刻打开电脑下载dump文件进行分析，不幸的是在分析的过程中，又连续的出现了几次崩溃，在这么反复崩溃、重启折腾了1小时左右，服务终于正常了。</p>
+<h1 id="分析dump"><a href="#分析dump" class="headerlink" title="分析dump"></a>分析dump</h1><p>下载路径：链接：<a href="https://pan.baidu.com/s/1GPzzipmxWyIr5WKNq11pIQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1GPzzipmxWyIr5WKNq11pIQ</a> 提取码：6dsn </p>
+<h3 id="分析-11-13-20-53-03-full-dmp"><a href="#分析-11-13-20-53-03-full-dmp" class="headerlink" title="分析[11-13 20-53-03]full.dmp"></a>分析[11-13 20-53-03]full.dmp</h3><ol>
+<li>使用windbg打开dmp，并加载符号文件</li>
+<li><p>使用命令 .ecxr 切换到异常上下文</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">0:061&gt; .ecxr</span><br><span class="line">eax=00000000 ebx=dfa477a6 ecx=0000020c edx=00000000 esi=10171adc edi=dfa40000</span><br><span class="line">eip=77bee41b esp=08c8f51c ebp=08c8f550 iopl=0         nv up ei pl nz na pe nc</span><br><span class="line">cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010206</span><br><span class="line">ntdll!RtlInitUnicodeString+0x1f3:</span><br><span class="line">77bee41b 8930            mov     dword ptr [eax],esi  ds:002b:00000000=????????</span><br><span class="line">0:061&gt; kv</span><br><span class="line">  *** Stack trace for last set context - .thread/.cxr resets it</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">08c8f550 77bee023 00936e28 00936e28 08c8f5b4 ntdll!RtlInitUnicodeString+0x1f3</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for kernel32.dll - </span><br><span class="line">08c8f568 774414ad 008e0000 00000000 1065fd28 ntdll!RtlFreeHeap+0x7e</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for msvcr120.dll - </span><br><span class="line">08c8f57c 70fdecfa 008e0000 00000000 1065fd28 kernel32!HeapFree+0x14</span><br><span class="line">*** WARNING: Unable to verify checksum for topsvr.exe</span><br><span class="line">08c8f590 00315e35 1065fd28 0f611df0 002cef01 msvcr120!free+0x1a</span><br><span class="line">08c8f5a8 00315f4a 00936e28 00000000 00000000 topsvr!redisBufferWrite+0xb5</span><br><span class="line">08c8f5bc 003160b7 00936e28 08c8f5d0 1033f5e8 topsvr!redisGetReply+0x4a</span><br><span class="line">08c8f5d4 0034ae42 00936e28 0f813270 69b2eb38 topsvr!redisCommand+0x37</span><br><span class="line">08c8f6dc 0034ee4f 08c8f764 08c8f818 69b2ea74 topsvr!CRedisBase::RedisCommand+0x92 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\redisbase.cpp @ 217]</span><br><span class="line">08c8f790 0034d24a 08c8f9fc 08c8f818 69b2e5d4 topsvr!CRedisMaster::GetYQWRoomInfo+0x5f (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\redismaster.cpp @ 623]</span><br><span class="line">08c8f830 00378957 08c8f9fc 08c8f924 69b2e414 topsvr!CRedisMaster::GetYQWRoomInfo+0x4a (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\redismaster.cpp @ 636]</span><br><span class="line">08c8f9f0 0036bab4 08c8fafc 00048e0f 69b2e604 topsvr!ToPSvrThriftHandler::GetYQWRoomByNo+0xc7 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\thirdpart\thrift-0.10.0\gen-cpp\topsvrthrift_server.skeleton.cpp @ 86]</span><br><span class="line">08c8fbe0 0036b31f 00000000 100e3170 100e30e0 topsvr!Tcy::ToPSvr::Thrift::ToPSvrThriftProcessor::process_GetYQWRoomByNo+0x1e4 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\thirdpart\thrift-0.10.0\gen-cpp\topsvrthrift.cpp @ 1823]</span><br><span class="line">08c8fcec 00375429 100e3170 100e30e0 08c8fd64 topsvr!Tcy::ToPSvr::Thrift::ToPSvrThriftProcessor::dispatchCall+0x28f (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\thirdpart\thrift-0.10.0\gen-cpp\topsvrthrift.cpp @ 1742]</span><br><span class="line">08c8fd90 002dcf11 100e3170 0f611e08 100e30e0 topsvr!apache::thrift::TDispatchProcessor::process+0xd9 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\svn143\library\thrift-0.10.0\lib\cpp\src\thrift\tdispatchprocessor.h @ 121]</span><br><span class="line">08c8fe44 002cab31 0093f988 002cadde 69b2e34c topsvr!apache::thrift::server::TConnectedClient::run+0x121</span><br><span class="line">08c8fea8 002cf00c 69b2e334 0093fed0 0093efa8 topsvr!apache::thrift::concurrency::ThreadManager::Task::run+0x11</span><br><span class="line">08c8fed0 002cfcd1 0093efa8 0093fed0 69b2e2e8 topsvr!apache::thrift::concurrency::StdThread::threadMain+0x5c</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for msvcp120.dll - </span><br><span class="line">08c8ff0c 7196f33c 432a8f49 00000000 009817d8 topsvr!std::_LaunchPad&lt;std::_Bind&lt;1,void,void (__cdecl*const)(boost::shared_ptr&lt;apache::thrift::concurrency::StdThread&gt;),boost::shared_ptr&lt;apache::thrift::concurrency::StdThread&gt; &gt; &gt;::_Run+0x71</span><br><span class="line">08c8ff34 70ffc01d 0377f764 432a8da9 00000000 msvcp120!std::_Pad::_Release+0x6c</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>异常来自CRedisBase::RedisCommand,最终是kernel32!HeapFree 导致异常</p>
+</li>
+<li><p>使用 !analyze -v  查看错误原因</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">SYMBOL_NAME:  heap_corruption!heap_corruption</span><br><span class="line"></span><br><span class="line">FOLLOWUP_NAME:  MachineOwner</span><br><span class="line"></span><br><span class="line">MODULE_NAME: heap_corruption</span><br><span class="line"></span><br><span class="line">IMAGE_NAME:  heap_corruption</span><br><span class="line"></span><br><span class="line">DEBUG_FLR_IMAGE_TIMESTAMP:  0</span><br><span class="line"></span><br><span class="line">STACK_COMMAND:  ~61s; .ecxr ; kb</span><br><span class="line"></span><br><span class="line">FAILURE_BUCKET_ID:  HEAP_CORRUPTION_c0000005_heap_corruption!heap_corruption</span><br><span class="line"></span><br><span class="line">BUCKET_ID:  APPLICATION_FAULT_HEAP_CORRUPTION_INVALID_POINTER_WRITE_NULL_POINTER_WRITE_heap_corruption!heap_corruption</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本可以确定是 heap被破坏导致的。</p>
+</li>
+</ol>
+<h3 id="heap异常"><a href="#heap异常" class="headerlink" title="heap异常"></a>heap异常</h3><p>对于heap异常，在溢出或被踩时是不会产生异常的，异常是在释放的时候才产生。<br>那么如何才能让heap被破坏时就产生异常呢？ 就是通过之前介绍的 “windows的应用验证机制”</p>
+<h3 id="使用appverif-exe"><a href="#使用appverif-exe" class="headerlink" title="使用appverif.exe"></a>使用appverif.exe</h3><p>在第二天晚上蹲点，出现异常时立刻给服务开启heap检测，服务运行几分钟后又出现崩溃。</p>
+<h3 id="分析-11-13-21-10-08-full-开启heap检测-dmp"><a href="#分析-11-13-21-10-08-full-开启heap检测-dmp" class="headerlink" title="分析[11-13 21-10-08]full 开启heap检测.dmp"></a>分析[11-13 21-10-08]full 开启heap检测.dmp</h3><p>使用windbg打开该dmp</p>
+<ol>
+<li><p>.ecxr 切换到异常上下文</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">0:119&gt; .ecxr </span><br><span class="line">eax=22ac1000 ebx=08de9ce8 ecx=22ac1000 edx=22ac0fff esi=1c8c0fe0 edi=08de9ce0</span><br><span class="line">eip=00bb6e31 esp=17d7f258 ebp=17d7f2ac iopl=0         nv up ei pl zr na pe nc</span><br><span class="line">cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246</span><br><span class="line">*** WARNING: Unable to verify checksum for topsvr.exe</span><br><span class="line">topsvr!Base64encode+0x1c1:</span><br><span class="line">00bb6e31 c60000          mov     byte ptr [eax],0           ds:002b:22ac1000=??</span><br><span class="line">0:119&gt; kv</span><br><span class="line">  *** Stack trace for last set context - .thread/.cxr resets it</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">17d7f2ac 00bbc06e 22ac0fa8 22d3ee58 00000042 topsvr!Base64encode+0x1c1 (FPO: [Non-Fpo]) (CONV: cdecl) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\base64.cpp @ 207]</span><br><span class="line">17d7f50c 00bb83d1 22d3e198 22d3ed80 17d7f620 topsvr!CBillDB::MakeParam_PushPlayerInfo+0x19e (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\billdb.cpp @ 625]</span><br><span class="line">17d7f668 00bb8842 22d3e198 22d3e390 00000000 topsvr!CBillDB::PushBill2DB+0x351 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\billdb.cpp @ 102]</span><br><span class="line">17d7f718 00bec143 22d3e198 22d3e390 11588718 topsvr!CBillDB::PushBill+0xe2 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\billdb.cpp @ 154]</span><br><span class="line">17d7f884 00be7695 21df6fe8 22528fe0 1732cfb8 topsvr!CSockServer::OnYQWResultEx+0x4a3 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\socksvr.cpp @ 1733]</span><br><span class="line">17d7f91c 00c1ac94 21df6fe8 22528fe0 08de9ce8 topsvr!CSockServer::OnRequest+0x3b5 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\topsvr\socksvr.cpp @ 293]</span><br><span class="line">17d7f944 00c1efeb 00000000 17324c40 17070c40 topsvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">17d7f95c 00c1efbb 17d7f99c 70ffc01d 08de9ce0 topsvr!CBaseWorker::WorkerThreadProc+0x2b</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以很容易看到是Base64encode导致异常</p>
+</li>
+<li>通过windbg的watch 查看入参参数，定位到原因： nikename数组只分配了128字节，但是某个玩家是156字节，导致转换溢出。</li>
+<li>长度修改为256，服务发布后，就不再出现问题。</li>
+</ol>
 
       
     </div>
@@ -492,14 +503,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/windbg分析内存泄漏/" rel="next" title="windbg分析内存泄漏">
+                <i class="fa fa-chevron-left"></i> windbg分析内存泄漏
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/08/搭建pdb服务器/" rel="prev" title="搭建pdb服务器">
+                搭建pdb服务器 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +559,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +647,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析dump"><span class="nav-number">2.</span> <span class="nav-text">分析dump</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析-11-13-20-53-03-full-dmp"><span class="nav-number">2.0.1.</span> <span class="nav-text">分析[11-13 20-53-03]full.dmp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#heap异常"><span class="nav-number">2.0.2.</span> <span class="nav-text">heap异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用appverif-exe"><span class="nav-number">2.0.3.</span> <span class="nav-text">使用appverif.exe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析-11-13-21-10-08-full-开启heap检测-dmp"><span class="nav-number">2.0.4.</span> <span class="nav-text">分析[11-13 21-10-08]full 开启heap检测.dmp</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

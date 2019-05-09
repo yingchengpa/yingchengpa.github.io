@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="SetUnhandledExceptionFilter 捕获的异常有限，比如ctr异常、栈溢出的异常就无法捕获。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="捕获异常并自动保存dump">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/捕获异常并自动保存dump/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="SetUnhandledExceptionFilter 捕获的异常有限，比如ctr异常、栈溢出的异常就无法捕获。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-07T11:20:36.847Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="捕获异常并自动保存dump">
+<meta name="twitter:description" content="SetUnhandledExceptionFilter 捕获的异常有限，比如ctr异常、栈溢出的异常就无法捕获。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/捕获异常并自动保存dump/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>捕获异常并自动保存dump | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/捕获异常并自动保存dump/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">捕获异常并自动保存dump
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 19:15:00 / Modified: 19:20:36" itemprop="dateCreated datePublished" datetime="2019-05-07T19:15:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +446,9 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+        <p>SetUnhandledExceptionFilter 捕获的异常有限，比如ctr异常、栈溢出的异常就无法捕获。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/************************************************************************/</span></span><br><span class="line"><span class="comment">/* 之所以应用程序捕获不到栈溢出异常，原因是因为新版本的CRT实现在异常处理中强制删除所有应用程序先前设置的捕获函数，如下所示：</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">__crtUnhandledException()</span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">SetUnhandledExceptionFilter(NULL);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">UnhandledExceptionFilter(&amp;ExceptionPointers);</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">解决方法是拦截CRT调用SetUnhandledExceptionFilter函数，使之无效。在X86平台下，可以使用以下代码                                                                     * /</span></span><br><span class="line"><span class="comment">/************************************************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DisableSetUnhandledExceptionFilter</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">void</span> *addr = (<span class="keyword">void</span>*)GetProcAddress(LoadLibrary(_T(<span class="string">"kernel32.dll"</span>)), <span class="string">"SetUnhandledExceptionFilter"</span>);</span><br><span class="line">    <span class="keyword">if</span> (addr)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">char</span> code[<span class="number">16</span>];</span><br><span class="line">        <span class="keyword">int</span> size = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        code[size++] = <span class="number">0x33</span>;</span><br><span class="line">        code[size++] = <span class="number">0xC0</span>;</span><br><span class="line">        code[size++] = <span class="number">0xC2</span>;</span><br><span class="line">        code[size++] = <span class="number">0x04</span>;</span><br><span class="line">        code[size++] = <span class="number">0x00</span>;</span><br><span class="line">        DWORD dwOldFlag, dwTempFlag;</span><br><span class="line"></span><br><span class="line">        (<span class="keyword">void</span>)VirtualProtect(addr, size, PAGE_READWRITE, &amp;dwOldFlag);</span><br><span class="line">        (<span class="keyword">void</span>)WriteProcessMemory(GetCurrentProcess(), addr, code, size, <span class="literal">NULL</span>);</span><br><span class="line">        (<span class="keyword">void</span>)VirtualProtect(addr, size, dwOldFlag, &amp;dwTempFlag);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">WriteMiniDMP</span><span class="params">(struct _EXCEPTION_POINTERS *pExp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CString   strDumpFile;</span><br><span class="line">    TCHAR szFilePath[MAX_PATH];</span><br><span class="line">    GetModuleFileName(<span class="literal">NULL</span>, szFilePath, MAX_PATH);</span><br><span class="line">    *<span class="built_in">strrchr</span>(szFilePath, <span class="string">'\\'</span>) = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    SYSTEMTIME stTime;</span><br><span class="line">    GetLocalTime(&amp;stTime);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 保存fulldump</span></span><br><span class="line">    &#123;</span><br><span class="line">        strDumpFile.Format(<span class="string">"%s\\[%02d-%02d %02d-%02d-%02d]full.dmp"</span>, szFilePath, stTime.wMonth, stTime.wDay, stTime.wHour, stTime.wMinute, stTime.wSecond);</span><br><span class="line">        HANDLE   hFile = CreateFile(strDumpFile, GENERIC_WRITE, FILE_SHARE_WRITE, <span class="literal">NULL</span>, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, <span class="literal">NULL</span>);</span><br><span class="line">        <span class="keyword">if</span> (hFile != INVALID_HANDLE_VALUE)</span><br><span class="line">        &#123;</span><br><span class="line">            MINIDUMP_EXCEPTION_INFORMATION   ExInfo;</span><br><span class="line">            ExInfo.ThreadId = ::GetCurrentThreadId();</span><br><span class="line">            ExInfo.ExceptionPointers = pExp;</span><br><span class="line">            ExInfo.ClientPointers = <span class="literal">NULL</span>;</span><br><span class="line">            <span class="comment">//   write   the   dump </span></span><br><span class="line">            (<span class="keyword">void</span>)MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, (MINIDUMP_TYPE)<span class="number">0x9b67</span>, &amp;ExInfo, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">            CloseHandle(hFile);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">LONG WINAPI <span class="title">ExpFilter</span><span class="params">(struct _EXCEPTION_POINTERS *pExp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line">	   <span class="keyword">if</span> (!flag)&#123; <span class="comment">// 防止多个线程同时写dump导致系统函数死锁</span></span><br><span class="line">		flag = <span class="literal">true</span>;</span><br><span class="line">		WriteMiniDMP(pExp);</span><br><span class="line">		flag = <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">return</span> EXCEPTION_EXECUTE_HANDLER;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	::SetUnhandledExceptionFilter(ExpFilter);</span><br><span class="line">	<span class="comment">//捕获crt的栈溢出异常</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="string">"10"</span> != getOSName()) <span class="comment">// win10 系统不生效</span></span><br><span class="line">	&#123;</span><br><span class="line">		DisableSetUnhandledExceptionFilter();</span><br><span class="line">	&#125;</span><br><span class="line">    ........</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上基本可以捕获大部分异常</p>
 
       
     </div>
@@ -492,14 +479,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/简单分析minidump-2/" rel="next" title="简单分析minidump(2)">
+                <i class="fa fa-chevron-left"></i> 简单分析minidump(2)
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/使用CMap导致服务高CPU/" rel="prev" title="使用CMap导致服务高CPU">
+                使用CMap导致服务高CPU <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

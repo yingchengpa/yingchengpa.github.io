@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="介绍一个json异常导致的死锁分析。同事某天求助帮忙分析一个死锁dump，按照之前查找临界区的方法，他已经具体定位到了某个线程，但是线程打印的堆栈信息却令他没有头绪。 准备工作dump下载地址（提取码：ndel） 步骤1按照之前的方法1）、~*kv  打印所有线程堆栈2）、遍历线程内容，找到可疑点3）、可疑线程为52、53、54…… 2通过查看临界区的OwningThread 找到线程 56切换到">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="异常引起的死锁">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/异常引起的死锁/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="介绍一个json异常导致的死锁分析。同事某天求助帮忙分析一个死锁dump，按照之前查找临界区的方法，他已经具体定位到了某个线程，但是线程打印的堆栈信息却令他没有头绪。 准备工作dump下载地址（提取码：ndel） 步骤1按照之前的方法1）、~*kv  打印所有线程堆栈2）、遍历线程内容，找到可疑点3）、可疑线程为52、53、54…… 2通过查看临界区的OwningThread 找到线程 56切换到">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-07T11:22:23.813Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="异常引起的死锁">
+<meta name="twitter:description" content="介绍一个json异常导致的死锁分析。同事某天求助帮忙分析一个死锁dump，按照之前查找临界区的方法，他已经具体定位到了某个线程，但是线程打印的堆栈信息却令他没有头绪。 准备工作dump下载地址（提取码：ndel） 步骤1按照之前的方法1）、~*kv  打印所有线程堆栈2）、遍历线程内容，找到可疑点3）、可疑线程为52、53、54…… 2通过查看临界区的OwningThread 找到线程 56切换到">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/异常引起的死锁/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>异常引起的死锁 | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/异常引起的死锁/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">异常引起的死锁
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 19:22:00 / Modified: 19:22:23" itemprop="dateCreated datePublished" datetime="2019-05-07T19:22:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +446,17 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>一个json异常导致的死锁分析。<br>同事某天求助帮忙分析一个死锁dump，按照之前查找临界区的方法，他已经具体定位到了某个线程，但是线程打印的堆栈信息却令他没有头绪。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>dump<a href="https://pan.baidu.com/s/1y0w-xOLZOJMxmBB-jn4Lbw" title="下载地址" target="_blank" rel="noopener">下载地址</a>（提取码：ndel）</p>
+<h1 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h1><h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p>按照之前的方法<br>1）、~*kv  打印所有线程堆栈<br>2）、遍历线程内容，找到可疑点<br>3）、可疑线程为52、53、54……</p>
+<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><p>通过查看临界区的OwningThread 找到线程 56<br>切换到~56 线程。</p>
+<h2 id="3"><a href="#3" class="headerlink" title="3"></a>3</h2><p>查看56线程堆栈（kv）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">0:056&gt; kv</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">08ccd8d4 76ddd846 00000000 00000000 00000000 user32!NtUserWaitMessage+0x15 (FPO: [0,0,0])</span><br><span class="line">08ccd910 76ddda5c 06f400d2 00000000 00000000 user32!DialogBox2+0x222 (FPO: [Non-Fpo])</span><br><span class="line">08ccd93c 76e0f7d0 76da0000 09f6fe90 00000000 user32!InternalDialogBox+0xe5 (FPO: [Non-Fpo])</span><br><span class="line">08ccd9f0 76e0faac 00012010 00000000 ffffffff user32!SoftModalMessageBox+0x757 (FPO: [Non-Fpo])</span><br><span class="line">08ccdb48 76e0fbaf 08ccdb54 00000028 00000000 user32!MessageBoxWorker+0x269 (FPO: [Non-Fpo])</span><br><span class="line">08ccdbb4 76e0fc2e 00000000 0084acf8 09ee8d38 user32!MessageBoxTimeoutW+0x52 (FPO: [Non-Fpo])</span><br><span class="line">08ccdbe8 76e0fd81 00000000 08ccdd84 0028f764 user32!MessageBoxTimeoutA+0x76 (FPO: [Non-Fpo])</span><br><span class="line">08ccdc08 76e0fdc6 00000000 08ccdd84 0028f764 user32!MessageBoxExA+0x1b (FPO: [Non-Fpo])</span><br><span class="line">*** WARNING: Unable to verify checksum for XYSoapClient.dll</span><br><span class="line">*** ERROR: Symbol file could not be found.  Defaulted to export symbols for XYSoapClient.dll - </span><br><span class="line">08ccdc24 0028cdd9 00000000 08ccdd84 0028f764 user32!MessageBoxA+0x18 (FPO: [Non-Fpo])</span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">08ccde24 0028bf49 0000000a 00289e54 0028ba37 XYSoapClient!DllUnregisterServer+0x6bae</span><br><span class="line">08ccde5c 769a03bb 08ccdf14 9616d04a 00000000 XYSoapClient!DllUnregisterServer+0x5d1e</span><br><span class="line">08ccdee4 77d65be7 08ccdf14 77d65ac4 00000000 kernel32!UnhandledExceptionFilter+0x127 (FPO: [Non-Fpo])</span><br><span class="line">08ccdeec 77d65ac4 00000000 08ccfe1c 77d1c620 ntdll!__RtlUserThreadStart+0x62 (FPO: [SEH])</span><br><span class="line">08ccdf00 77d65951 00000000 00000000 00000000 ntdll!_EH4_CallFilterFunc+0x12 (FPO: [Uses EBP] [0,0,4])</span><br><span class="line">08ccdf28 77d53529 fffffffe 08ccfe0c 08cce064 ntdll!_except_handler4+0x8e (FPO: [Non-Fpo])</span><br><span class="line">08ccdf4c 77d534fb 08cce014 08ccfe0c 08cce064 ntdll!ExecuteHandler2+0x26 (FPO: [Uses EBP] [5,3,1])</span><br><span class="line">08ccdf70 77d5349c 08cce014 08ccfe0c 08cce064 ntdll!ExecuteHandler+0x24 (FPO: [5,0,3])</span><br><span class="line">08ccdffc 77d00143 01cce014 08cce064 08cce014 ntdll!RtlDispatchException+0x127 (FPO: [Non-Fpo])</span><br><span class="line">08ccdffc 00000000 01cce014 08cce064 08cce014 ntdll!KiUserExceptionDispatcher+0xf (FPO: [2,0,0]) (CONTEXT @ 00000008)</span><br></pre></td></tr></table></figure></p>
+<h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><p>同事按照方法找到了导致死锁的线程，但从堆栈中却看不出原因，都是系统函数，有点无从下手。<br>从这个堆栈信息大致猜测是该线程触发了一个异常并弹出了异常框导致线程阻塞（由于是服务模式所以看不到这个异常框），但是锁资源却没有释放，从而导致了其他线程也出现了死锁。<br>接下来，我们需要从这个堆栈信息切换到异常发生时的堆栈信息。</p>
+<h2 id="切换异常上下文"><a href="#切换异常上下文" class="headerlink" title="切换异常上下文"></a>切换异常上下文</h2><p>函数原型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KiUserExceptionDispatcher( PEXCEPTION_RECORD pExcptRec, CONTEXT * pContext )</span><br></pre></td></tr></table></figure></p>
+<p>KiUserExceptionDispatcher 的第二个参数其实就是上下文地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">08ccdffc 00000000 01cce014 08cce064 08cce014 ntdll!KiUserExceptionDispatcher+0xf (FPO: [2,0,0]) (CONTEXT @ 00000008)</span><br></pre></td></tr></table></figure></p>
+<p>可以通过如下命令，切换上下文<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.cxr 08cce064</span><br></pre></td></tr></table></figure></p>
+<p>最终得到的异常堆栈<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">0:056&gt; .cxr 08cce064 </span><br><span class="line">eax=08cce4c8 ebx=00792f90 ecx=00000003 edx=00000000 esi=00f3de44 edi=08cce570</span><br><span class="line">eip=7767c54f esp=08cce4c8 ebp=08cce518 iopl=0         nv up ei pl nz ac po nc</span><br><span class="line">cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000212</span><br><span class="line">KERNELBASE!RaiseException+0x58:</span><br><span class="line">7767c54f c9              leave</span><br><span class="line">0:056&gt; kv</span><br><span class="line">  *** Stack trace for last set context - .thread/.cxr resets it</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">08cce518 6f799339 e06d7363 00000001 00000003 KERNELBASE!RaiseException+0x58 (FPO: [Non-Fpo])</span><br><span class="line">08cce558 00ee5f9b 08cce570 00f3de44 419ffac3 msvcr120!_CxxThrowException+0x5b (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\eh\throw.cpp @ 152]</span><br><span class="line">08cce5a0 00ee3852 08cce660 419ff9eb 00f1be7d gssssvr!Json::throwLogicError+0x7b</span><br><span class="line">08cce688 00ee42c4 00f1be7c 00f1be83 00792f88 gssssvr!Json::Value::find+0x82</span><br><span class="line">08cce6a0 00e1d5a5 00f1be7c 419fe277 09f03cd0 gssssvr!Json::Value::isMember+0x24</span><br><span class="line">08ccfd14 00e1bc40 007c5b50 09f04018 0084eb60 gssssvr!CGameServer::OnSendSysMsgToServer+0x985 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gssssvr\gssssvr\server.cpp @ 675]</span><br><span class="line">08ccfd44 00ed9124 007c5b50 09f04018 00792f90 gssssvr!CGameServer::OnRequest+0x90 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gssssvr\gssssvr\server.cpp @ 162]</span><br><span class="line">08ccfd6c 00eccf1b 00000000 045f7f30 008295e8 gssssvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">08ccfd84 00ecceeb 08ccfdc4 6f7ac01d 00792f88 gssssvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">08ccfd8c 6f7ac01d 00792f88 961623f0 00000000 gssssvr!CBaseWorker::WorkerThreadFunc+0xb</span><br><span class="line">08ccfdc4 6f7ac001 00000000 08ccfddc 7696336a msvcr120!_callthreadstartex+0x1b (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 376]</span><br><span class="line">08ccfdd0 7696336a 008295e8 08ccfe1c 77d29902 msvcr120!_threadstartex+0x7c (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 354]</span><br><span class="line">08ccfddc 77d29902 008295e8 ab5803ad 00000000 kernel32!BaseThreadInitThunk+0xe (FPO: [Non-Fpo])</span><br><span class="line">08ccfe1c 77d298d5 6f7abfb4 008295e8 ffffffff ntdll!__RtlUserThreadStart+0x70 (FPO: [Non-Fpo])</span><br><span class="line">08ccfe34 00000000 6f7abfb4 008295e8 00000000 ntdll!_RtlUserThreadStart+0x1b (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure></p>
+<p>这个堆栈信息就可以看清楚触发异常的具体代码，结合windbg的‘watch’‘local’功能查看变量信息，找到具体原因。</p>
 
       
     </div>
@@ -492,14 +487,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/使用CMap导致服务高CPU/" rel="next" title="使用CMap导致服务高CPU">
+                <i class="fa fa-chevron-left"></i> 使用CMap导致服务高CPU
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/windbg分析临界区死锁/" rel="prev" title="windbg分析临界区死锁">
+                windbg分析临界区死锁 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +543,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +631,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1"><span class="nav-number">3.1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-number">3.2.</span> <span class="nav-text">2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-number">3.3.</span> <span class="nav-text">3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#疑惑"><span class="nav-number">3.4.</span> <span class="nav-text">疑惑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切换异常上下文"><span class="nav-number">3.5.</span> <span class="nav-text">切换异常上下文</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

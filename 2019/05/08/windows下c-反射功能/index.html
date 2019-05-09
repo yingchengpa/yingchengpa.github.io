@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="背景c++开发的软件在生产环境中运行出现一些bug，比如参数错误等问题，通过日志只能打印异常的行号或函数，但具体的结构体/类的参数内容打印却非常麻烦，无法做到一些更高级语言的反射功能。要做到能够通过变量地址就打印变量的内容信息，就需要依赖ms提供的msdia120.dll和程序编译后的pdb文件。 原理msdia120.dll 需要注册到目标机器，通过提供的接口函数可以解析pdb文件中的结构体、类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="windows下c++反射功能">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/08/windows下c-反射功能/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="背景c++开发的软件在生产环境中运行出现一些bug，比如参数错误等问题，通过日志只能打印异常的行号或函数，但具体的结构体/类的参数内容打印却非常麻烦，无法做到一些更高级语言的反射功能。要做到能够通过变量地址就打印变量的内容信息，就需要依赖ms提供的msdia120.dll和程序编译后的pdb文件。 原理msdia120.dll 需要注册到目标机器，通过提供的接口函数可以解析pdb文件中的结构体、类">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-08T06:54:33.943Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="windows下c++反射功能">
+<meta name="twitter:description" content="背景c++开发的软件在生产环境中运行出现一些bug，比如参数错误等问题，通过日志只能打印异常的行号或函数，但具体的结构体/类的参数内容打印却非常麻烦，无法做到一些更高级语言的反射功能。要做到能够通过变量地址就打印变量的内容信息，就需要依赖ms提供的msdia120.dll和程序编译后的pdb文件。 原理msdia120.dll 需要注册到目标机器，通过提供的接口函数可以解析pdb文件中的结构体、类">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/08/windows下c-反射功能/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>windows下c++反射功能 | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/08/windows下c-反射功能/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">windows下c++反射功能
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-08 14:54:00 / Modified: 14:54:33" itemprop="dateCreated datePublished" datetime="2019-05-08T14:54:00+08:00">2019-05-08</time>
             
 
             
@@ -448,20 +446,22 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>c++开发的软件在生产环境中运行出现一些bug，比如参数错误等问题，通过日志只能打印异常的行号或函数，但具体的结构体/类的参数内容打印却非常麻烦，无法做到一些更高级语言的反射功能。<br>要做到能够通过变量地址就打印变量的内容信息，就需要依赖ms提供的msdia120.dll和程序编译后的pdb文件。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>msdia120.dll 需要注册到目标机器，通过提供的接口函数可以解析pdb文件中的结构体、类，并提供这个成员变量的类型、相对的地址偏移。</p>
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;typeinfo&gt;</span><br><span class="line">#include &quot;tcDump.h&quot;</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;map&gt;</span><br><span class="line">#include &lt;list&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">struct STTEST</span><br><span class="line">&#123;</span><br><span class="line">    int a;</span><br><span class="line">    double b;</span><br><span class="line">    float c;</span><br><span class="line">    short d;</span><br><span class="line">    char szName[32];</span><br><span class="line">    void *p;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">class CClassTest</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    std::string m_strName;</span><br><span class="line">    std::vector&lt;int&gt; m_oVec;</span><br><span class="line">    std::map&lt;int, std::string&gt; m_oMap;</span><br><span class="line">    //std::list&lt;int&gt; m_oList; // 不支持，慢慢完善</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int _tmain(int argc, _TCHAR* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    if (0 == TCDUMP_INIT(&quot;ConsoleApplication1.pdb&quot;))&#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    //结构体</span><br><span class="line">    &#123;</span><br><span class="line">        STTEST st = &#123; 0 &#125;;</span><br><span class="line">        st.a = 1;</span><br><span class="line">        st.b = 1.2;</span><br><span class="line">        st.c = 2.3;</span><br><span class="line">        st.d = 655;</span><br><span class="line">        memcpy(st.szName, &quot;hello world&quot;, 12);</span><br><span class="line">        st.p = (void*)0x123456;</span><br><span class="line"></span><br><span class="line">        auto json = TCDUMP(st);</span><br><span class="line">        if (NULL == json)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        printf(&quot;%s\n&quot;, json);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //类对象</span><br><span class="line">    &#123;</span><br><span class="line">        CClassTest oTest;</span><br><span class="line">        oTest.m_strName = &quot;this is a test for string&quot;;</span><br><span class="line">        oTest.m_oVec.push_back(6);</span><br><span class="line">        oTest.m_oVec.push_back(7);</span><br><span class="line">        oTest.m_oVec.push_back(8);</span><br><span class="line"></span><br><span class="line">        oTest.m_oMap[0] = &quot;this is 0&quot;;</span><br><span class="line">        oTest.m_oMap[1] = &quot;this is 1&quot;;</span><br><span class="line">        oTest.m_oMap[2] = &quot;this is 2&quot;;</span><br><span class="line"></span><br><span class="line">        auto json = TCDUMP(oTest);</span><br><span class="line">        if (NULL == json)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        printf(&quot;%s\n&quot;, json);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="输出效果"><a href="#输出效果" class="headerlink" title="输出效果"></a>输出效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;a&quot; : 1,</span><br><span class="line">   &quot;b&quot; : 1.2,</span><br><span class="line">   &quot;c&quot; : 2.2999999523162842,</span><br><span class="line">   &quot;d&quot; : 655,</span><br><span class="line">   &quot;p&quot; : &quot;[0x00123456]&quot;,</span><br><span class="line">   &quot;szName&quot; : &quot;hello world&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">   &quot;m_oMap&quot; : &#123;</span><br><span class="line">      &quot;0&quot; : &quot;this is 0&quot;,</span><br><span class="line">      &quot;1&quot; : &quot;this is 1&quot;,</span><br><span class="line">      &quot;2&quot; : &quot;this is 2&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;m_oVec&quot; : [ 6, 7, 8 ],</span><br><span class="line">   &quot;m_strName&quot; : &quot;this is a test for string&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>后续在每个关键函数的入口增加一个宏定义，就可以轻松的定位参数错误的问题，而省去了大量的远程调试时间。</p>
+<h2 id="二次开发"><a href="#二次开发" class="headerlink" title="二次开发"></a>二次开发</h2><p>visual studio 的安装路径下存在一个demo程序：DIA SDK 。可以通过修改其中的代码实现，当然<br>我的百度网盘有封装后的sdk更加容易使用。</p>
+<p><a href="https://pan.baidu.com/s/1takuuHhxGt_WkLQWGDeacQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1takuuHhxGt_WkLQWGDeacQ</a></p>
 <ul>
-<li>6、设置应用符号文件路径</li>
+<li>msdia120.dll</li>
+<li>tcDump.dll</li>
+<li>tcDump.h</li>
+<li>tcDump.lib</li>
+<li>tcDumpD.lib</li>
+<li>tcDumpD.dll</li>
+<li>使用说明.txt</li>
 </ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
 
       
     </div>
@@ -492,14 +492,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/08/搭建pdb服务器/" rel="next" title="搭建pdb服务器">
+                <i class="fa fa-chevron-left"></i> 搭建pdb服务器
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/08/C-EH-exception/" rel="prev" title="C++ EH exception">
+                C++ EH exception <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +548,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +636,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#效果"><span class="nav-number">3.</span> <span class="nav-text">效果</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#demo"><span class="nav-number">3.1.</span> <span class="nav-text">demo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出效果"><span class="nav-number">3.2.</span> <span class="nav-text">输出效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二次开发"><span class="nav-number">3.3.</span> <span class="nav-text">二次开发</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

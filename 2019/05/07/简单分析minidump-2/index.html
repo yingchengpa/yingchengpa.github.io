@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，CString大小写转化导致的异常（提取码ffk6）。 步骤1使用windbg打开minidump，设置好应用程序的pdb， 执行命令 “.ecxr” 、”kv” ,打印如下栈信息 1234567891011121314151617181920212223242526272">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="简单分析minidump(2)">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/简单分析minidump-2/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，CString大小写转化导致的异常（提取码ffk6）。 步骤1使用windbg打开minidump，设置好应用程序的pdb， 执行命令 “.ecxr” 、”kv” ,打印如下栈信息 1234567891011121314151617181920212223242526272">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-07T09:32:08.317Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="简单分析minidump(2)">
+<meta name="twitter:description" content="有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，CString大小写转化导致的异常（提取码ffk6）。 步骤1使用windbg打开minidump，设置好应用程序的pdb， 执行命令 “.ecxr” 、”kv” ,打印如下栈信息 1234567891011121314151617181920212223242526272">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/简单分析minidump-2/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>简单分析minidump(2) | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/简单分析minidump-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">简单分析minidump(2)
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 17:31:00 / Modified: 17:32:08" itemprop="dateCreated datePublished" datetime="2019-05-07T17:31:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +446,14 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
+        <p>有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，<a href="https://pan.baidu.com/s/1-Ni2EyvEH5-57XYjsjs1Tw" title="CString大小写转化导致的异常" target="_blank" rel="noopener">CString大小写转化导致的异常</a>（提取码ffk6）。</p>
+<h2 id="步骤1"><a href="#步骤1" class="headerlink" title="步骤1"></a>步骤1</h2><p>使用windbg打开minidump，设置好应用程序的pdb， 执行命令 “.ecxr” 、”kv” ,打印如下栈信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">0:121&gt; .ecxr</span><br><span class="line">eax=0e16eea8 ebx=00160768 ecx=00000000 edx=00000001 esi=0e16ef38 edi=0e16ef48</span><br><span class="line">eip=7c80bef7 esp=0e16eea4 ebp=0e16eef8 iopl=0         nv up ei pl nz na pe nc</span><br><span class="line">cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00000206</span><br><span class="line">Unable to load image C:\WINDOWS\system32\kernel32.dll, Win32 error 0n2</span><br><span class="line">*** WARNING: Unable to verify timestamp for kernel32.dll</span><br><span class="line">*** ERROR: Module load completed but symbols could not be loaded for kernel32.dll</span><br><span class="line">kernel32+0xbef7:</span><br><span class="line">7c80bef7 ??              ???</span><br><span class="line">*** ERROR: Module load completed but symbols could not be loaded for mfc120.dll</span><br><span class="line">0:121&gt; kv</span><br><span class="line">  *** Stack trace for last set context - .thread/.cxr resets it</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">WARNING: Stack unwind information not available. Following frames may be wrong.</span><br><span class="line">0e16eea0 1028bc8c e06d7363 00000001 00000000 kernel32+0xbef7</span><br><span class="line">*** WARNING: Unable to verify timestamp for msvcr120.dll</span><br><span class="line">*** ERROR: Module load completed but symbols could not be loaded for msvcr120.dll</span><br><span class="line">0e16eef8 005a9339 e06d7363 00000001 00000003 mfc120+0x28bc8c</span><br><span class="line">0e16ef38 101eee11 0e16ef48 1028bc8c 1029b540 msvcr120+0x19339</span><br><span class="line">0e16ef4c 100566d4 00160760 0b139848 004a67d2 mfc120+0x1eee11</span><br><span class="line">*** WARNING: Unable to verify timestamp for BlockSvr.exe</span><br><span class="line">0e16ef8c 004dc703 0b224248 ec476e15 00000002 mfc120+0x566d4</span><br><span class="line">0e16fea0 004c2bcf 0b139e10 0b167c20 001dfe60 BlockSvr!CSockServer::OnLogonUserV2+0x723 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\blocksvr\user.cpp @ 11713]</span><br><span class="line">0e16ff2c 005041e4 0b139e10 0b167c20 00160768 BlockSvr!CSockServer::OnRequest+0x90f (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\blocksvr\socksvr.cpp @ 424]</span><br><span class="line">0e16ff54 0050c04b 00000000 0b088970 0b2ec408 BlockSvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">0e16ff6c 0050c01b 0e16ffac 005bc01d 00160760 BlockSvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">0e16ff74 005bc01d 00160760 9835355e 00000000 BlockSvr!CBaseWorker::WorkerThreadFunc+0xb</span><br><span class="line">0e16ffac 005bc001 00000000 0e16ffec 7c82482f msvcr120+0x2c01d</span><br><span class="line">0e16ffb8 7c82482f 0b2ec408 00000000 00000000 msvcr120+0x2c001</span><br><span class="line">0e16ffec 00000000 005bbfb4 0b2ec408 00000000 kernel32+0x2482f</span><br></pre></td></tr></table></figure>
+<h2 id="步骤2"><a href="#步骤2" class="headerlink" title="步骤2"></a>步骤2</h2><p>显示了应用程序的代码行号，但我们希望看到更仔细点，就需要加载windows的系统符号文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+<h2 id="步骤3"><a href="#步骤3" class="headerlink" title="步骤3"></a>步骤3</h2><p>设置后，重新“kv” 查看堆栈信息，显示如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">0:121&gt; kv</span><br><span class="line">  *** Stack trace for last set context - .thread/.cxr resets it</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">0e16eef8 005a9339 e06d7363 00000001 00000003 kernel32!RaiseException+0x53 (FPO: [Non-Fpo])</span><br><span class="line">0e16ef38 101eee11 0e16ef48 1028bc8c 1029b540 msvcr120!_CxxThrowException+0x5b (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\eh\throw.cpp @ 152]</span><br><span class="line">0e16ef4c 100566d4 00160760 0b139848 004a67d2 mfc120!AfxThrowInvalidArgException+0x19 (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\vc7libs\ship\atlmfc\src\mfc\except.cpp @ 228]</span><br><span class="line">*** WARNING: Unable to verify timestamp for BlockSvr.exe</span><br><span class="line">0e16ef58 004a67d2 ec477f39 00000000 49bf1ce1 mfc120!ATL::CStringT&lt;char,StrTraitMFC_DLL&lt;char,ATL::ChTraitsCRT&lt;char&gt; &gt; &gt;::MakeLower+0x23 (FPO: [0,0,0]) (CONV: thiscall) [f:\dd\vctools\vc7libs\ship\atlmfc\include\cstringt.h @ 1796]</span><br><span class="line">0e16ef8c 004dc703 0b224248 ec476e15 00000002 BlockSvr!IsTempLogonToken+0x52 (FPO: [Non-Fpo]) (CONV: cdecl) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\blocksvr\main.cpp @ 2277]</span><br><span class="line">0e16fea0 004c2bcf 0b139e10 0b167c20 001dfe60 BlockSvr!CSockServer::OnLogonUserV2+0x723 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\blocksvr\user.cpp @ 11713]</span><br><span class="line">0e16ff2c 005041e4 0b139e10 0b167c20 00160768 BlockSvr!CSockServer::OnRequest+0x90f (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\blocksvr\socksvr.cpp @ 424]</span><br><span class="line">0e16ff54 0050c04b 00000000 0b088970 0b2ec408 BlockSvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">0e16ff6c 0050c01b 0e16ffac 005bc01d 00160760 BlockSvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">0e16ff74 005bc01d 00160760 9835355e 00000000 BlockSvr!CBaseWorker::WorkerThreadFunc+0xb</span><br><span class="line">0e16ffac 005bc001 00000000 0e16ffec 7c82482f msvcr120!_callthreadstartex+0x1b (FPO: [Non-Fpo]) (CONV: cdecl) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 376]</span><br><span class="line">0e16ffb8 7c82482f 0b2ec408 00000000 00000000 msvcr120!_threadstartex+0x7c (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 354]</span><br><span class="line">0e16ffec 00000000 005bbfb4 0b2ec408 00000000 kernel32!BaseThreadStart+0x34 (FPO: [Non-Fpo])</span><br></pre></td></tr></table></figure>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>可以看到是由于CString 触发了_CxxThrowException。 服务从VC6版本切换到VS2013，CString 的MakeLower 函数检查变的更加严格，部分特殊用户名在VC6中正确转化，但是在vs2013中会抛出异常，将大小写转化函数替换为CharLower ，问题解决</p>
 
       
     </div>
@@ -492,14 +484,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/简单分析minidump-1/" rel="next" title="简单分析minidump(1)">
+                <i class="fa fa-chevron-left"></i> 简单分析minidump(1)
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/捕获异常并自动保存dump/" rel="prev" title="捕获异常并自动保存dump">
+                捕获异常并自动保存dump <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +540,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +628,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤1"><span class="nav-number">1.</span> <span class="nav-text">步骤1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤2"><span class="nav-number">2.</span> <span class="nav-text">步骤2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤3"><span class="nav-number">3.</span> <span class="nav-text">步骤3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">4.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

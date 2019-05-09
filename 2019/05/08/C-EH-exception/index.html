@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="介绍某个代理服务器在压力测试时发生异常，以下是定位过程 保存dump因为提早有知道程序会出现异常，所以中间省去了很多步骤，在服务启动时就已经使用windbg attach到了服务进程上，这样一旦程序触发异常windbg立即就会捕获。dump下载：链接：https://pan.baidu.com/s/1Ntm3MRQnbMqGtLkAushSvg 提取码：nvu1  分析过程程序异常在程序运行了15">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="C++ EH exception">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/08/C-EH-exception/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="介绍某个代理服务器在压力测试时发生异常，以下是定位过程 保存dump因为提早有知道程序会出现异常，所以中间省去了很多步骤，在服务启动时就已经使用windbg attach到了服务进程上，这样一旦程序触发异常windbg立即就会捕获。dump下载：链接：https://pan.baidu.com/s/1Ntm3MRQnbMqGtLkAushSvg 提取码：nvu1  分析过程程序异常在程序运行了15">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-08T06:58:23.361Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="C++ EH exception">
+<meta name="twitter:description" content="介绍某个代理服务器在压力测试时发生异常，以下是定位过程 保存dump因为提早有知道程序会出现异常，所以中间省去了很多步骤，在服务启动时就已经使用windbg attach到了服务进程上，这样一旦程序触发异常windbg立即就会捕获。dump下载：链接：https://pan.baidu.com/s/1Ntm3MRQnbMqGtLkAushSvg 提取码：nvu1  分析过程程序异常在程序运行了15">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/08/C-EH-exception/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>C++ EH exception | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/08/C-EH-exception/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">C++ EH exception
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-08 14:58:00 / Modified: 14:58:23" itemprop="dateCreated datePublished" datetime="2019-05-08T14:58:00+08:00">2019-05-08</time>
             
 
             
@@ -448,21 +446,23 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
-
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>某个代理服务器在压力测试时发生异常，以下是定位过程</p>
+<h1 id="保存dump"><a href="#保存dump" class="headerlink" title="保存dump"></a>保存dump</h1><p>因为提早有知道程序会出现异常，所以中间省去了很多步骤，在服务启动时就已经使用windbg attach到了服务进程上，这样一旦程序触发异常windbg立即就会捕获。<br>dump下载：链接：<a href="https://pan.baidu.com/s/1Ntm3MRQnbMqGtLkAushSvg" target="_blank" rel="noopener">https://pan.baidu.com/s/1Ntm3MRQnbMqGtLkAushSvg</a> 提取码：nvu1 </p>
+<h1 id="分析过程"><a href="#分析过程" class="headerlink" title="分析过程"></a>分析过程</h1><h3 id="程序异常"><a href="#程序异常" class="headerlink" title="程序异常"></a>程序异常</h3><p>在程序运行了15小时之后，程序触发了异常，windbg 上使用 命令 !analyze -v 分析异常原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Failed calling InternetOpenUrl, GLE=12002</span><br><span class="line"></span><br><span class="line">FAULTING_IP: </span><br><span class="line">KERNELBASE!RaiseException+58</span><br><span class="line">76dcc42d c9              leave</span><br><span class="line"></span><br><span class="line">EXCEPTION_RECORD:  ffffffff -- (.exr 0xffffffffffffffff)</span><br><span class="line">ExceptionAddress: 76dcc42d (KERNELBASE!RaiseException+0x00000058)</span><br><span class="line">   ExceptionCode: e06d7363 (C++ EH exception)</span><br><span class="line">  ExceptionFlags: 00000001</span><br><span class="line">NumberParameters: 3</span><br><span class="line">   Parameter[0]: 19930520</span><br><span class="line">   Parameter[1]: 026ffa68</span><br><span class="line">   Parameter[2]: 746dc7fc</span><br><span class="line"></span><br><span class="line">DEFAULT_BUCKET_ID:  APPLICATION_FAULT</span><br><span class="line"></span><br><span class="line">STACK_TEXT:  </span><br><span class="line">026ffa18 746c9339 e06d7363 00000001 00000003 KERNELBASE!RaiseException+0x58</span><br><span class="line">026ffa58 7470da6a 026ffa68 746dc7fc 746dd1cc msvcr120!_CxxThrowException+0x5b [f:\dd\vctools\crt\crtw32\eh\throw.cpp @ 152]</span><br><span class="line">026ffa78 009ba351 00004400 03d95cc8 03d95d20 msvcr120!operator new+0x50 [f:\dd\vctools\crt\crtw32\heap\new.cpp @ 62]</span><br><span class="line">026ffa8c 009c9c01 00004400 03d95cc8 009c9824 roommpsvr!std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;::_Buy+0x41</span><br><span class="line">026ffad4 009c9b9f 0324d520 00621598 2cf7d616 roommpsvr!std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt;+0x21</span><br><span class="line">026ffb08 009c2858 08cb66d8 2cf7d606 045aad60 roommpsvr!mp::MPSocket::create_ssl+0x5f</span><br><span class="line">026ffb9c 009c5987 026ffbf8 0000020f 026ffc18 roommpsvr!mp::WSSConnection::handle_judge_protocol+0x248</span><br><span class="line">026ffbac 009c5341 026ffbe8 026ffbe8 2cf7d6de roommpsvr!boost::asio::asio_handler_invoke&lt;boost::asio::detail::binder2&lt;boost::_bi::bind_t&lt;void,boost::_mfi::mf2&lt;void,mp::WSConnection,boost::system::error_code const &amp;,unsigned int&gt;,boost::_bi::list3&lt;boost::_bi::value&lt;boost::shared_ptr&lt;mp::WSSConnection&gt; &gt;,boost::arg&lt;1&gt;,boost::arg&lt;2&gt; &gt; &gt;,boost::system::error_code,unsigned int&gt; &gt;+0x17</span><br><span class="line">026ffc18 009b603d 00643940 045aad60 026ffc4c roommpsvr!boost::asio::detail::win_iocp_socket_recv_op&lt;boost::asio::mutable_buffers_1,boost::_bi::bind_t&lt;void,boost::_mfi::mf2&lt;void,mp::WSConnection,boost::system::error_code const &amp;,unsigned int&gt;,boost::_bi::list3&lt;boost::_bi::value&lt;boost::shared_ptr&lt;mp::WSSConnection&gt; &gt;,boost::arg&lt;1&gt;,boost::arg&lt;2&gt; &gt; &gt; &gt;::do_complete+0x101</span><br><span class="line">026ffc78 009b5ba7 2cf7d166 026ffcc8 2cf7d1aa roommpsvr!boost::asio::detail::win_iocp_io_service::do_one+0x17d</span><br><span class="line">026ffcb4 009b63fa 026ffcc8 00647e70 00647e70 roommpsvr!boost::asio::detail::win_iocp_io_service::run+0xc7</span><br><span class="line">026ffcd0 00b182de 2cf7d1e6 00000000 00651090 roommpsvr!boost::asio::io_service::run+0x2a</span><br><span class="line">026ffcf8 746dc01d 00647e70 ff4a9697 00000000 roommpsvr!boost::`anonymous namespace&apos;::thread_start_function+0x5e</span><br><span class="line">026ffd30 746dc001 00000000 026ffd48 769f337a msvcr120!_callthreadstartex+0x1b [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 376]</span><br><span class="line">026ffd3c 769f337a 00650900 026ffd88 77389882 msvcr120!_threadstartex+0x7c [f:\dd\vctools\crt\crtw32\startup\threadex.c @ 354]</span><br><span class="line">026ffd48 77389882 00650900 a6a6cb5f 00000000 kernel32!BaseThreadInitThunk+0xe</span><br><span class="line">026ffd88 77389855 746dbfb4 00650900 ffffffff ntdll!__RtlUserThreadStart+0x70</span><br><span class="line">026ffda0 00000000 746dbfb4 00650900 00000000 ntdll!_RtlUserThreadStart+0x1b</span><br></pre></td></tr></table></figure></p>
+<h3 id="查看堆栈"><a href="#查看堆栈" class="headerlink" title="查看堆栈"></a>查看堆栈</h3><p>从堆栈信息中可以看到，在mp::MPSocket::create_ssl 中new了对象，然后new.cpp@62 抛出了一个异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">void *__CRTDECL operator new(size_t size) _THROW1(_STD bad_alloc)</span><br><span class="line">        &#123;       // try to allocate size bytes</span><br><span class="line">        void *p;</span><br><span class="line">        while ((p = malloc(size)) == 0)</span><br><span class="line">                if (_callnewh(size) == 0)</span><br><span class="line">                &#123;       // report no memory</span><br><span class="line">                        _THROW_NCEE(_XSTD bad_alloc, );    ----------&gt;&gt;&gt; @62</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">        return (p);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="查看内存信息"><a href="#查看内存信息" class="headerlink" title="查看内存信息"></a>查看内存信息</h3><p>使用工具processxp 查看对应服务的内存状态，虚拟内存、提交内存 都是很低的，不太可能会出现内存申请失败。</p>
+<h3 id="进一步确认原因"><a href="#进一步确认原因" class="headerlink" title="进一步确认原因"></a>进一步确认原因</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">EXCEPTION_RECORD:  ffffffff -- (.exr 0xffffffffffffffff)</span><br><span class="line">ExceptionAddress: 76dcc42d (KERNELBASE!RaiseException+0x00000058)</span><br><span class="line">   ExceptionCode: e06d7363 (C++ EH exception)</span><br><span class="line">  ExceptionFlags: 00000001</span><br><span class="line">NumberParameters: 3</span><br><span class="line">   Parameter[0]: 19930520</span><br><span class="line">   Parameter[1]: 026ffa68</span><br><span class="line">   Parameter[2]: 746dc7fc</span><br></pre></td></tr></table></figure>
+<p>google 搜索 “e06d7363 (C++ EH exception)”，  查看链接：<a href="https://blogs.msdn.microsoft.com/oldnewthing/20100730-00/?p=13273" target="_blank" rel="noopener">https://blogs.msdn.microsoft.com/oldnewthing/20100730-00/?p=13273</a><br>按照它的步骤进一步确认C++ 异常原因：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0:008&gt; dd 746dc7fc l4         ---&gt; 是小写的“L&quot;</span><br><span class="line">746dc7fc  00000000 746e3cc0 00000000 746dc80c</span><br><span class="line">0:008&gt; dd 746dc80c l2</span><br><span class="line">746dc80c  00000002 746dd1ac</span><br><span class="line">0:008&gt; dd 746dd1ac l2</span><br><span class="line">746dd1ac  00000010 74790d38</span><br><span class="line">0:008&gt; da 74790d38 + 8</span><br><span class="line">74790d40  &quot;.?AVbad_alloc@std@@&quot;</span><br></pre></td></tr></table></figure></p>
+<p>发现的确是 “bad_alloc@std” 导致的异常。</p>
+<p>仔细观察物理机器的状态，发现其中一个redis服务吃了大概2G多的内存，会不会是这个原因导致服务进程在申请pagefile时失败呢？ 杀掉异常进程继续观察。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>长时间观察程序正常。本文的目的主要是介绍如何解码c++异常的具体原因。</p>
+<h1 id="附其他操作"><a href="#附其他操作" class="headerlink" title="附其他操作"></a>附其他操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">026ffa58 7470da6a 026ffa68 746dc7fc 746dd1cc msvcr120!_CxxThrowException+0x5b (FPO: [Non-Fpo]) (CONV: stdcall) [f:\dd\vctools\crt\crtw32\eh\throw.cpp @ 152]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">__CxxThrowException(</span><br><span class="line">        void*           pExceptionObject,   // The object thrown</span><br><span class="line">        _ThrowInfo*     pThrowInfo          // Everything we need to know about it</span><br></pre></td></tr></table></figure>
+<p>746dc7fc 其实就是_ThrowInfo 结构体的指针信息，通过watch查看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef const struct _s__ThrowInfo</span><br><span class="line">&#123;</span><br><span class="line">unsigned int attributes;</span><br><span class="line">_PMFN pmfnUnwind;</span><br><span class="line">int (__cdecl*pForwardCompat)(...);</span><br><span class="line">_CatchableTypeArray *pCatachableTypeArray;</span><br><span class="line">&#125; _ThrowInfo;</span><br></pre></td></tr></table></figure></p>
+<p>结构体中重要的成员是_CatchableTypeArray。它包含了程序运行时抛出对象的类新信息(RTTI).<br>如果你的程序运行时抛出一个my_exception类型的对象，那么抛出的数据参数pCatchableTypeArray包含了两个重要子数据信息。一个是typeid(my_exception)，另外一个是typeid(std::exception)。</p>
+<p>所以通过watch查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(ThrowInfo*)0x746dc7fc     0x746dc7fc struct _s_ThrowInfo *</span><br><span class="line">-attributes                0</span><br><span class="line">-pmfnUnwind                0x746e3cc0</span><br><span class="line">-pForwardCompat            0x00000000</span><br><span class="line">-pCatchableTypeArray       0x746dc80c struct _s_CatchableTypeArray *</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dd 0x746dc80c </span><br><span class="line">746dc80c  00000002 746dd1ac 746e3b04 eb0cc483</span><br><span class="line">746dc81c  be575612 7478fcb0 790d68bf 047e8374</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">watch  中查看(_s_CatchableType*)0x746dd1ac</span><br><span class="line">(_s_CatchableType*)0x746dd1ac    0x746dd1ac struct _s_CatchableType *</span><br><span class="line">-properties                      0x10</span><br><span class="line">-pType                           0x74790d38 struct TypeDescriptor *</span><br><span class="line">--hash                           0x746bec94</span><br><span class="line">-spare                           0x00000000</span><br><span class="line">--name                           char [] &quot;.?AVbad_alloc@std@@&quot;</span><br><span class="line">-thisDisplacement                struct PMD</span><br><span class="line">-sizeOrOffset                    0n12</span><br><span class="line">-copyFunction                    0x746dd190</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -492,15 +492,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/08/windows下c-反射功能/" rel="next" title="windows下c++反射功能">
+                <i class="fa fa-chevron-left"></i> windows下c++反射功能
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -544,8 +544,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +632,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#保存dump"><span class="nav-number">2.</span> <span class="nav-text">保存dump</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析过程"><span class="nav-number">3.</span> <span class="nav-text">分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序异常"><span class="nav-number">3.0.1.</span> <span class="nav-text">程序异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看堆栈"><span class="nav-number">3.0.2.</span> <span class="nav-text">查看堆栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看内存信息"><span class="nav-number">3.0.3.</span> <span class="nav-text">查看内存信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进一步确认原因"><span class="nav-number">3.0.4.</span> <span class="nav-text">进一步确认原因</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附其他操作"><span class="nav-number">5.</span> <span class="nav-text">附其他操作</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

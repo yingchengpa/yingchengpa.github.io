@@ -96,19 +96,17 @@
 
 
 
-  <meta name="description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+  <meta name="description" content="介绍前面的章节都在讲解通过SetUnhandledExceptionFilter 设置程序自动捕获异常dump，这类dump通过.ecxr 命令或者 !analyze -v 就可以找到异常，但是在有些情况下（比如别人的项目），没有自动保存异常dump时应该怎么分析呢？ 现象某个新项目在测试环境出现了异常，弹出了一个异常框，这是windows下比较常见的异常框，是因为程序遇到了异常，但是没有设置用户">
 <meta property="og:type" content="article">
-<meta property="og:title" content="windbg分析准备工作">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/hello-world/index.html">
+<meta property="og:title" content="如何错过异常第一现场找到异常上下文">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/如何错过异常第一现场找到异常上下文/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
+<meta property="og:description" content="介绍前面的章节都在讲解通过SetUnhandledExceptionFilter 设置程序自动捕获异常dump，这类dump通过.ecxr 命令或者 !analyze -v 就可以找到异常，但是在有些情况下（比如别人的项目），没有自动保存异常dump时应该怎么分析呢？ 现象某个新项目在测试环境出现了异常，弹出了一个异常框，这是windows下比较常见的异常框，是因为程序遇到了异常，但是没有设置用户">
 <meta property="og:locale" content="zh_Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-07T09:24:43.928Z">
+<meta property="og:updated_time" content="2019-05-07T09:29:03.681Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="windbg分析准备工作">
-<meta name="twitter:description" content="1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。 2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性； 3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要 4、windbg软件，32位 下载 5、设置系统符号文件路径。  1e:\mylocalsymbols;SRV*e:\mylocalsymbols*http">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="如何错过异常第一现场找到异常上下文">
+<meta name="twitter:description" content="介绍前面的章节都在讲解通过SetUnhandledExceptionFilter 设置程序自动捕获异常dump，这类dump通过.ecxr 命令或者 !analyze -v 就可以找到异常，但是在有些情况下（比如别人的项目），没有自动保存异常dump时应该怎么分析呢？ 现象某个新项目在测试环境出现了异常，弹出了一个异常框，这是windows下比较常见的异常框，是因为程序遇到了异常，但是没有设置用户">
 
 
 
@@ -116,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/07/如何错过异常第一现场找到异常上下文/">
 
 
 
@@ -126,7 +124,7 @@
   };
 </script>
 
-  <title>windbg分析准备工作 | 睡在床板下</title>
+  <title>如何错过异常第一现场找到异常上下文 | 睡在床板下</title>
   
 
 
@@ -341,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/如何错过异常第一现场找到异常上下文/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -358,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">windbg分析准备工作
+          <h1 class="post-title" itemprop="name headline">如何错过异常第一现场找到异常上下文
 
               
             
@@ -384,7 +382,7 @@
                 
               
 
-              <time title="Created: 2019-05-07 12:58:00 / Modified: 17:24:43" itemprop="dateCreated datePublished" datetime="2019-05-07T12:58:00+08:00">2019-05-07</time>
+              <time title="Created: 2019-05-07 17:27:00 / Modified: 17:29:03" itemprop="dateCreated datePublished" datetime="2019-05-07T17:27:00+08:00">2019-05-07</time>
             
 
             
@@ -448,20 +446,14 @@
       
 
       
-        <ul>
-<li>1、可以上网的电脑。用于下载系统符号文件，没有也没有太大关系。</li>
-<li>2、应用程序关闭优化。 关闭优化是方便通过windbg查找内存数据的准确性；</li>
-<li>3、匹配的应用程序/dll 的pdb文件。有匹配的pdb才可以找到对应的代码行数、内存参数。很重要</li>
-<li>4、windbg软件，32位 <a href="https://pan.baidu.com/s/1YJxfeWb0rxch7sm6nb4D7g" title="下载" target="_blank" rel="noopener">下载</a></li>
-<li>5、设置系统符号文件路径。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e:\mylocalsymbols;SRV*e:\mylocalsymbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-<p><img src="http://upload-images.jianshu.io/upload_images/16010422-32dc99722adf7136.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
-<ul>
-<li>6、设置应用符号文件路径</li>
-</ul>
-<p>PS： win10 的windows商店有款 windbg priview 更加推荐。</p>
-<p>下一节如何保存dump。</p>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>前面的章节都在讲解通过SetUnhandledExceptionFilter 设置程序自动捕获异常dump，这类dump通过.ecxr 命令或者 !analyze -v 就可以找到异常，但是在有些情况下（比如别人的项目），没有自动保存异常dump时应该怎么分析呢？</p>
+<h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p>某个新项目在测试环境出现了异常，弹出了一个异常框，这是windows下比较常见的异常框，是因为程序遇到了异常，但是没有设置用户自定异常处理函数，从而触发了windows默认异常处理函数“弹出一个异常提示框”。<br>这种情况下：<br>1、不要关闭对话框。使用windbg attach 到该异常程序<br>2、通过命令 .dump /ma d:\xx.dmp 保存fulldump<br>分析方法<br>通过windbg打开xx.dmp,加载系统符号文件。<br>输入命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~*er?$t1=((ntdll!_NT_TIB*)@$teb)-&gt;StackLimit;r?$t2=((ntdll!_NT_TIB*)@$teb)-&gt;StackBase;!teb;dps@$t1@$t2</span><br></pre></td></tr></table></figure></p>
+<p>这个命令是打印所有线程的调用栈，通过查找“KiUserExceptionDispatcher”来找到异常上下文。</p>
+<p>注意：因为如上命令会打印很多信息，所以windbg ui界面是无法显示的，好的办法是将输出都保存到日志文件中, windbg-&gt;”edit”-&gt;”open/close log file”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在输出的log文件中查找&quot;KiUserExceptionDispatcher&quot;,如下</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">044bed64  044ba000</span><br><span class="line">044bed68  00000000</span><br><span class="line">044bed6c  044bf288</span><br><span class="line">044bed70  77a70133 ntdll!KiUserExceptionDispatcher+0xf</span><br><span class="line">044bed74  014bed84</span><br><span class="line">044bed78  [044bedd4]</span><br><span class="line">044bed7c  044bed84</span><br><span class="line">044bed80  044bedd4</span><br><span class="line">044bed84  e06d7363</span><br><span class="line">044bed88  00000001</span><br><span class="line">044bed8c  00000000</span><br><span class="line">044bed90  769cc42d KERNELBASE!RaiseException+0x58</span><br></pre></td></tr></table></figure>
+<p>注意其中“[]”的内容，这个地址就是异常上下文地址，最后通过命令<br>.cxr 044bedd4</p>
+<p>kv</p>
+<p>就可以找到异常点。</p>
 
       
     </div>
@@ -492,14 +484,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/05/07/hello-world/" rel="next" title="windbg分析准备工作">
+                <i class="fa fa-chevron-left"></i> windbg分析准备工作
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/如何错过异常第一现场找到异常上下文/" rel="prev" title="如何错过异常第一现场找到异常上下文">
-                如何错过异常第一现场找到异常上下文 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/简单分析minidump-1/" rel="prev" title="简单分析minidump(1)">
+                简单分析minidump(1) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -544,8 +540,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +628,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#现象"><span class="nav-number">2.</span> <span class="nav-text">现象</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
