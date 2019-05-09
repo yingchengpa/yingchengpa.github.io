@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh_Hans">
+<html class="theme-next gemini use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -102,7 +102,7 @@
 <meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/windbg分析内存泄漏/index.html">
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="介绍本文主要介绍一种通过windbg分析内存泄漏的方法。 现象后台检测程序在某天上报了告警，大概就是某程序的提交内存达到了1.0G。登陆后台查看，该进程已经运行了90天，提交内存每天都在持续上涨，从启动到目前为止大概累计上升了800M。应该是存在内存泄漏。让运维通过工具保存了fulldump 准备工作 下载地址（提取码：11bg） 设置好系统的pdb1e:\mylocalsymbols;SRV*e">
-<meta property="og:locale" content="zh_Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://91dengdeng.cn/wp-content/uploads/2018/10/5d2f13bab110f9858adade236e77c2bf.png">
 <meta property="og:updated_time" content="2019-05-07T11:24:41.316Z">
 <meta name="twitter:card" content="summary">
@@ -167,7 +167,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh_Hans">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -198,7 +198,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -226,7 +226,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -243,7 +243,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -260,7 +260,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
 
@@ -271,7 +271,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -291,7 +291,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -377,14 +377,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-05-07 19:24:00 / Modified: 19:24:41" itemprop="dateCreated datePublished" datetime="2019-05-07T19:24:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-07 19:24:00 / 修改时间：19:24:41" itemprop="dateCreated datePublished" datetime="2019-05-07T19:24:00+08:00">2019-05-07</time>
             
 
             
@@ -403,7 +403,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">分类于</span>
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
@@ -426,7 +426,7 @@
             <span class="post-meta-divider">|</span>
             <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
-             Views:  
+             阅读次数： 
             <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
@@ -505,8 +505,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/07/windbg分析临界区死锁/" rel="next" title="windbg分析临界区死锁">
-                <i class="fa fa-chevron-left"></i> windbg分析临界区死锁
+              <a href="/2019/05/07/异常引起的死锁/" rel="next" title="异常引起的死锁">
+                <i class="fa fa-chevron-left"></i> 异常引起的死锁
               </a>
             
           </div>
@@ -563,10 +563,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            站点概览
           </li>
         </ul>
       
@@ -586,8 +586,8 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">13</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -605,8 +605,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">1</span>
-                    <span class="site-state-item-name">categories</span>
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
@@ -708,7 +710,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-user"></i>
     </span>
-    <span class="site-uv" title="Total Visitors">
+    <span class="site-uv" title="总访客量">
       <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
     </span>
   
@@ -721,7 +723,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-eye"></i>
     </span>
-    <span class="site-pv" title="Total Views">
+    <span class="site-pv" title="总访问量">
       <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
     </span>
   

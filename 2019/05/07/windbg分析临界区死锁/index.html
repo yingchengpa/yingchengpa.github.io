@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh_Hans">
+<html class="theme-next gemini use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -102,7 +102,7 @@
 <meta property="og:url" content="http://www.91dengdeng.cn/2019/05/07/windbg分析临界区死锁/index.html">
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="介绍多线程编程中，对于资源同步导致的死锁问题，应该是开发过程中经常碰到的，同时在问题定位过程中也会花费大量的时间，这里就介绍下如何通过windbg来分析死锁问题。 资源同步windows下资源同步的方法主要是  原子访问 临界区 读写锁 旋转锁 等待函数 事件 信号量 互斥量  其中最常用的应该是临界区了（性能开销小），所以我也是拿临界区作为分析对象，其他资源同步不在此讨论。 临界区保证在某一时刻">
-<meta property="og:locale" content="zh_Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:updated_time" content="2019-05-07T11:23:30.688Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="windbg分析临界区死锁">
@@ -165,7 +165,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh_Hans">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -196,7 +196,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -224,7 +224,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -241,7 +241,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
         
@@ -258,7 +258,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
 
@@ -269,7 +269,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -289,7 +289,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -375,14 +375,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-05-07 19:22:00 / Modified: 19:23:30" itemprop="dateCreated datePublished" datetime="2019-05-07T19:22:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-07 19:22:00 / 修改时间：19:23:30" itemprop="dateCreated datePublished" datetime="2019-05-07T19:22:00+08:00">2019-05-07</time>
             
 
             
@@ -406,7 +406,7 @@
             <span class="post-meta-divider">|</span>
             <span class="post-meta-item-icon">
             <i class="fa fa-eye"></i>
-             Views:  
+             阅读次数： 
             <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
             </span>
           
@@ -494,8 +494,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/07/异常引起的死锁/" rel="next" title="异常引起的死锁">
-                <i class="fa fa-chevron-left"></i> 异常引起的死锁
+              <a href="/2019/05/07/使用CMap导致服务高CPU/" rel="next" title="使用CMap导致服务高CPU">
+                <i class="fa fa-chevron-left"></i> 使用CMap导致服务高CPU
               </a>
             
           </div>
@@ -504,8 +504,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/07/windbg分析内存泄漏/" rel="prev" title="windbg分析内存泄漏">
-                windbg分析内存泄漏 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/07/异常引起的死锁/" rel="prev" title="异常引起的死锁">
+                异常引起的死锁 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -552,10 +552,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            站点概览
           </li>
         </ul>
       
@@ -575,8 +575,8 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">13</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -594,8 +594,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">1</span>
-                    <span class="site-state-item-name">categories</span>
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
@@ -697,7 +699,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-user"></i>
     </span>
-    <span class="site-uv" title="Total Visitors">
+    <span class="site-uv" title="总访客量">
       <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
     </span>
   
@@ -710,7 +712,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-eye"></i>
     </span>
-    <span class="site-pv" title="Total Views">
+    <span class="site-pv" title="总访问量">
       <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
     </span>
   
