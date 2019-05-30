@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。 游戏基础服务一旦出现问题，玩家就无法游戏，因为无法登陆、无法结算…. 所以是需要高可靠的服务。 我的主要职责就是维护基础服务的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="架构优化">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/05/30/架构优化/index.html">
+<meta property="og:site_name" content="睡在床板下">
+<meta property="og:description" content="背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。 游戏基础服务一旦出现问题，玩家就无法游戏，因为无法登陆、无法结算…. 所以是需要高可靠的服务。 我的主要职责就是维护基础服务的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16010422-c7adb9a66de7feed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16010422-2abc063ab93dc9da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-05-30T07:41:52.898Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="架构优化">
+<meta name="twitter:description" content="背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。 游戏基础服务一旦出现问题，玩家就无法游戏，因为无法登陆、无法结算…. 所以是需要高可靠的服务。 我的主要职责就是维护基础服务的">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/16010422-c7adb9a66de7feed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/05/30/架构优化/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>架构优化 | 睡在床板下</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">睡在床板下</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">世事多变，我心中自有主见</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/30/架构优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">架构优化
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-30 15:18:00 / 修改时间：15:41:52" itemprop="dateCreated datePublished" datetime="2019-05-30T15:18:00+08:00">2019-05-30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h1><p>公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.<br>游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。</p>
+<p>游戏基础服务一旦出现问题，玩家就无法游戏，因为无法登陆、无法结算…. 所以是需要高可靠的服务。</p>
+<p>我的主要职责就是维护基础服务的稳定运行。</p>
+<p>以上是职责介绍，下面是刚入职时基础服务的架构。</p>
+<h1 id="早期的架构"><a href="#早期的架构" class="headerlink" title="早期的架构"></a>早期的架构</h1><p>架构基本是按照业务单元进行分服务开发，但也不像微服务那么细微。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/16010422-c7adb9a66de7feed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>大致讲解：</p>
+<p>PC玩家是通过客户端配置的ip地址随机连接到hall。<br>移动玩家是通过域名连接到HallMP，然后HallMP在转发消息到Hall。<br>公司所有的游戏服务器连接到“指定”的check服务。<br>Hall”指定“连接某台block服务。<br>所有的block、check都要连接DB。<br>所有的block、check 都要连接hub、kub、sub<br>kub是内存服务，按照gameid hash分服<br>sub是内存服务，按照userid hash分服<br>最底下的所有服务shock、monck….都要连接kub、sub</p>
+<p>整个架构是比较清晰的，而且按照功能进行划分，hall、block、check、sub、kub都支持横向扩展，db使用分库分表设计。所以在性能上、横向扩展都没有太大问题。</p>
+<p>但实际在维护的过程中，还是会发现很多不合理的地方。</p>
+<h1 id="不合理的地方"><a href="#不合理的地方" class="headerlink" title="不合理的地方"></a>不合理的地方</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">自己的备忘录里面记录了服务大致需要整改的点有100多处</span><br></pre></td></tr></table></figure>
+<h2 id="生产工具落后"><a href="#生产工具落后" class="headerlink" title="生产工具落后"></a>生产工具落后</h2><p>使用的还是VC6 编译器。<br>无法使用c++1x的语法、写代码不方便、开源库不好支持等等</p>
+<h2 id="没有持续集成环境"><a href="#没有持续集成环境" class="headerlink" title="没有持续集成环境"></a>没有持续集成环境</h2><p>版本发布依赖领导的时间。（生产环境的版本必须由领导的机器编译），有次出现问题，问题定位5分钟，版本发布却花了3个小时。</p>
+<h2 id="服务无法灰度升级"><a href="#服务无法灰度升级" class="headerlink" title="服务无法灰度升级"></a>服务无法灰度升级</h2><p>服务升级都要在凌晨6点升级，而且升级过程中整体服务无法使用</p>
+<h2 id="单个服务异常影响整体"><a href="#单个服务异常影响整体" class="headerlink" title="单个服务异常影响整体"></a>单个服务异常影响整体</h2><p>整个架构里面服务相互链接构成网状，当某个服务异常时，常常会关联其他服务出现异常</p>
+<h2 id="整体服务容错性不足"><a href="#整体服务容错性不足" class="headerlink" title="整体服务容错性不足"></a>整体服务容错性不足</h2><p>单台block、check异常，就会导致这个节点上的所有玩家和游戏出现异常</p>
+<h2 id="没有健康监控功能"><a href="#没有健康监控功能" class="headerlink" title="没有健康监控功能"></a>没有健康监控功能</h2><p>出现问题都是玩家反馈，研发自己都不知道服务是否出现异常；</p>
+<h2 id="没有预警机制"><a href="#没有预警机制" class="headerlink" title="没有预警机制"></a>没有预警机制</h2><p>当性能、内存、io等不足时没有提早告知进行准备</p>
+<h2 id="定位方法落后"><a href="#定位方法落后" class="headerlink" title="定位方法落后"></a>定位方法落后</h2><p>采用原始的vistual stdio 调试，没有分析dump的能力</p>
+<h2 id="msmq-功能扩展、维护、定位麻烦"><a href="#msmq-功能扩展、维护、定位麻烦" class="headerlink" title="msmq 功能扩展、维护、定位麻烦"></a>msmq 功能扩展、维护、定位麻烦</h2><h2 id="服务的管理、配置落后"><a href="#服务的管理、配置落后" class="headerlink" title="服务的管理、配置落后"></a>服务的管理、配置落后</h2><h2 id="整体架构缺陷"><a href="#整体架构缺陷" class="headerlink" title="整体架构缺陷"></a>整体架构缺陷</h2><p>这个涉及点比较多，后续慢慢展开。</p>
+<h1 id="整改原因"><a href="#整改原因" class="headerlink" title="整改原因"></a>整改原因</h1><p>无他，就是”工匠精神“。既然做就做到我力所能及。</p>
+<h1 id="优化点"><a href="#优化点" class="headerlink" title="优化点"></a>优化点</h1><h2 id="升级开发工具到vs2013"><a href="#升级开发工具到vs2013" class="headerlink" title="升级开发工具到vs2013"></a>升级开发工具到vs2013</h2><h2 id="服务性能监控"><a href="#服务性能监控" class="headerlink" title="服务性能监控"></a>服务性能监控</h2><p>服务消息堆积数量、进程cpu、磁盘容量、提交内存大小 数据到大数据平台。<br>出现问题时，基本都是第一时间就能够在钉钉收到预警通知。</p>
+<h2 id="使用jenkins进行持续集成"><a href="#使用jenkins进行持续集成" class="headerlink" title="使用jenkins进行持续集成"></a>使用jenkins进行持续集成</h2><h2 id="windbg分析的持续培训"><a href="#windbg分析的持续培训" class="headerlink" title="windbg分析的持续培训"></a>windbg分析的持续培训</h2><h2 id="C-的优化"><a href="#C-的优化" class="headerlink" title="C++的优化"></a>C++的优化</h2><p>原来都采用的MFC的CMap、CString、线程、锁等都需要替换为stl、boost类型</p>
+<h2 id="调整架构，支持灰度发布"><a href="#调整架构，支持灰度发布" class="headerlink" title="调整架构，支持灰度发布"></a>调整架构，支持灰度发布</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这一步是工作量最大的，目前还在持续优化中</span><br></pre></td></tr></table></figure>
+<p>我暂时的架构是这样的：<br><img src="https://upload-images.jianshu.io/upload_images/16010422-2abc063ab93dc9da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="优化后的架构"></p>
+<ul>
+<li><p>将影响玩家的业务和统计业务，中间搭建 actik中转服务隔离开来<br>所有下游统计业务都需要经过actik服务进行清洗，然后才能到具体的业务服务中去</p>
+</li>
+<li><p>block、check服务使用无状态开发<br>这样游戏、玩家可以随机指定链接，然后引入负载均衡+域名管理，就可以方便地地给服务器导流，支持灰度升级</p>
+</li>
+<li><p>使用rabbitmq替换msmq<br>rabbitmq支持AMQP协议，扩展、管理、维护都非常方便</p>
+</li>
+<li><p>数据库的优化<br>分库、分表；购买新硬件、数据备份、导入导出</p>
+</li>
+</ul>
+<h2 id="后续计划"><a href="#后续计划" class="headerlink" title="后续计划"></a>后续计划</h2><ul>
+<li><p>引入稳定的gate服务<br>网关gate服务用户处理玩家的链接，不处理任何业务，所以只要gate不重启，服务中任何服务异常，玩家都不会有断开的影响。<br>同时支持负载均衡+域名管理，方便导流</p>
+</li>
+<li><p>统一配置中心</p>
+</li>
+<li><p>kub、sub灰度升级、扩展方案</p>
+</li>
+<li><p>代码linux化</p>
+</li>
+<li><p>部分服务go语言化</p>
+</li>
+</ul>
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><p>目前基础服务稳定性提高非常明显，两年基本就没出现过重大事故。<br>升级也方便了很多，除了几个服务还需要凌晨6点升级，大部分都可以灰度升级</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/28/精益产品开发/" rel="next" title="精益产品开发">
+                <i class="fa fa-chevron-left"></i> 精益产品开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">睡在床板下</p>
+              <div class="site-description motion-element" itemprop="description">世事多变，我心中自有主见</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.jianshu.com/u/d459b1e37f2e" title="简书 &rarr; https://www.jianshu.com/u/d459b1e37f2e" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的架构"><span class="nav-number">2.</span> <span class="nav-text">早期的架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不合理的地方"><span class="nav-number">3.</span> <span class="nav-text">不合理的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生产工具落后"><span class="nav-number">3.1.</span> <span class="nav-text">生产工具落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有持续集成环境"><span class="nav-number">3.2.</span> <span class="nav-text">没有持续集成环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务无法灰度升级"><span class="nav-number">3.3.</span> <span class="nav-text">服务无法灰度升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单个服务异常影响整体"><span class="nav-number">3.4.</span> <span class="nav-text">单个服务异常影响整体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体服务容错性不足"><span class="nav-number">3.5.</span> <span class="nav-text">整体服务容错性不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有健康监控功能"><span class="nav-number">3.6.</span> <span class="nav-text">没有健康监控功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有预警机制"><span class="nav-number">3.7.</span> <span class="nav-text">没有预警机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定位方法落后"><span class="nav-number">3.8.</span> <span class="nav-text">定位方法落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#msmq-功能扩展、维护、定位麻烦"><span class="nav-number">3.9.</span> <span class="nav-text">msmq 功能扩展、维护、定位麻烦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务的管理、配置落后"><span class="nav-number">3.10.</span> <span class="nav-text">服务的管理、配置落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体架构缺陷"><span class="nav-number">3.11.</span> <span class="nav-text">整体架构缺陷</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整改原因"><span class="nav-number">4.</span> <span class="nav-text">整改原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化点"><span class="nav-number">5.</span> <span class="nav-text">优化点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#升级开发工具到vs2013"><span class="nav-number">5.1.</span> <span class="nav-text">升级开发工具到vs2013</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务性能监控"><span class="nav-number">5.2.</span> <span class="nav-text">服务性能监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用jenkins进行持续集成"><span class="nav-number">5.3.</span> <span class="nav-text">使用jenkins进行持续集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windbg分析的持续培训"><span class="nav-number">5.4.</span> <span class="nav-text">windbg分析的持续培训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-的优化"><span class="nav-number">5.5.</span> <span class="nav-text">C++的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调整架构，支持灰度发布"><span class="nav-number">5.6.</span> <span class="nav-text">调整架构，支持灰度发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续计划"><span class="nav-number">5.7.</span> <span class="nav-text">后续计划</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#效果"><span class="nav-number">6.</span> <span class="nav-text">效果</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">睡在床板下</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
