@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，一个index过大导致数组越界引发的崩溃。 1、使用windbg 打开dump，设置pdb、系统pdb。 2、设置完成后，执行命令”.ecxr”。 因为是程序自动截获异常，所以dump中已保存了异常的上下文，直接使用”.ecxr” 切换即可。1234560:135&amp;gt;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-07T09:31:25.515Z">
+<meta property="og:updated_time" content="2019-06-19T02:18:25.765Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单分析minidump(1)">
 <meta name="twitter:description" content="有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，一个index过大导致数组越界引发的崩溃。 1、使用windbg 打开dump，设置pdb、系统pdb。 2、设置完成后，执行命令”.ecxr”。 因为是程序自动截获异常，所以dump中已保存了异常的上下文，直接使用”.ecxr” 切换即可。1234560:135&amp;gt;">
@@ -382,12 +382,24 @@
                 
               
 
-              <time title="创建时间：2019-05-07 17:30:00 / 修改时间：17:31:25" itemprop="dateCreated datePublished" datetime="2019-05-07T17:30:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-07 17:30:00" itemprop="dateCreated datePublished" datetime="2019-05-07T17:30:00+08:00">2019-05-07</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-19 10:18:25" itemprop="dateModified" datetime="2019-06-19T10:18:25+08:00">2019-06-19</time>
               
             
           </span>
@@ -452,7 +464,7 @@
 <p>3、“kv”。打印异常上下文的栈信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">0:135&gt; kv</span><br><span class="line">  *** Stack trace for last set context - .thread/.cxr resets it</span><br><span class="line">ChildEBP RetAddr  Args to Child              </span><br><span class="line">0ba9ec08 0040d9c4 0dea0048 af7220ac 0016ae10 CheckSvr!CalcKubIndexByGameID+0x1d (FPO: [Non-Fpo]) (CONV: cdecl) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\checksvr\main.cpp @ 1082]</span><br><span class="line">0ba9fcd4 0040bcb4 0db37c10 0db41a88 0aae48c0 CheckSvr!CSockServer::OnRefreshResultExFromKub+0x1ce4 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\checksvr\cmpaqpro.cpp @ 1081]</span><br><span class="line">0ba9feb4 0045ca88 0db37c10 0db41a88 0aae48c0 CheckSvr!CSockServer::OnRefreshResultEx+0x134 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\checksvr\cmpaqpro.cpp @ 419]</span><br><span class="line">0ba9ff2c 00477674 0db37c10 0db41a88 0016ae18 CheckSvr!CSockServer::OnRequest+0xd38 (FPO: [Non-Fpo]) (CONV: thiscall) [d:\program files (x86)\jenkins\workspace\publish_gamechannel\checksvr\socksvr.cpp @ 1931]</span><br><span class="line">0ba9ff54 0047e7db 00000000 0aae5e68 0a9c23a0 CheckSvr!CIocpWorker::DoWorkLoop+0xa4</span><br><span class="line">0ba9ff6c 0047e7ab 0ba9ffac 0050c01d 0016ae10 CheckSvr!CBaseWorker::WorkerThreadProc+0x2b</span><br><span class="line">0ba9ff74 0050c01d 0016ae10 876c3023 00000000 CheckSvr!CBaseWorker::WorkerThreadFunc+0xb</span><br></pre></td></tr></table></figure></p>
 <p>4、异常函数为CalcKubIndexByGameID， 入参的值为0dea0048。  回到代码查看CalcKubIndexByGameID的实现，</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int CalcKubIndexByGameID(int nGameID )</span><br><span class="line">&#123; </span><br><span class="line">       return g_kub[nGameID];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>明显nGameID 过大导致访问数组越界。 然后排查代码，发现nGameID未使用默认值，某些条件下使用了随机值导致。</p>
+<p>明显nGameID 过大导致访问数组越界。 然后排查代码，发现nGameID未使用默认值，某些条件下使用了随机值导致。<br>在代码编译中关闭“代码优化”，才可以使用这种方式。</p>
 
       
     </div>
@@ -555,7 +567,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">59</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -578,7 +590,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>

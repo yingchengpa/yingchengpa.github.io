@@ -103,13 +103,12 @@
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。 游戏基础服务一旦出现问题，玩家就无法游戏，因为无法登陆、无法结算…. 所以是需要高可靠的服务。 我的主要职责就是维护基础服务的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16010422-c7adb9a66de7feed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/16010422-2abc063ab93dc9da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-06-13T08:11:56.817Z">
+<meta property="og:image" content="http://www.91dengdeng.cn/images/pasted-2.png">
+<meta property="og:updated_time" content="2019-06-24T09:18:17.557Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++架构优化">
 <meta name="twitter:description" content="背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。 游戏基础服务一旦出现问题，玩家就无法游戏，因为无法登陆、无法结算…. 所以是需要高可靠的服务。 我的主要职责就是维护基础服务的">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/16010422-c7adb9a66de7feed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="http://www.91dengdeng.cn/images/pasted-2.png">
 
 
 
@@ -402,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-13 16:11:56" itemprop="dateModified" datetime="2019-06-13T16:11:56+08:00">2019-06-13</time>
+                <time title="修改时间：2019-06-24 17:18:17" itemprop="dateModified" datetime="2019-06-24T17:18:17+08:00">2019-06-24</time>
               
             
           </span>
@@ -466,10 +465,8 @@
 <p>我的主要职责就是维护基础服务的稳定运行。</p>
 <p>以上是职责介绍，下面是刚入职时基础服务的架构。</p>
 <h1 id="早期的架构"><a href="#早期的架构" class="headerlink" title="早期的架构"></a>早期的架构</h1><p>架构基本是按照业务单元进行分服务开发，但也不像微服务那么细微。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/16010422-c7adb9a66de7feed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
 <p>大致讲解：</p>
-<p>PC玩家是通过客户端配置的ip地址随机连接到hall。<br>移动玩家是通过域名连接到HallMP，然后HallMP在转发消息到Hall。<br>公司所有的游戏服务器连接到“指定”的check服务。<br>Hall”指定”连接某台block服务。<br>所有的block、check都要连接DB。<br>所有的block、check 都要连接hub、kub、sub<br>kub是内存服务，按照gameid hash分服<br>sub是内存服务，按照userid hash分服<br>最底下的所有服务shock、monck….都要连接kub、sub</p>
-<p>整个架构是比较清晰的，而且按照功能进行划分，hall、block、check、sub、kub都支持横向扩展，db使用分库分表设计。所以在性能上、横向扩展都没有太大问题。</p>
+<p>整个架构是比较清晰的，而且按照功能进行划分，所有服务都支持横向扩展，db使用分库分表设计。所以在性能上、横向扩展都没有太大问题。</p>
 <p>但实际在维护的过程中，还是会发现很多不合理的地方。</p>
 <ul>
 <li>升级一个简单的功能，需要重启很多重要的服务。每次升级都很纠结</li>
@@ -488,37 +485,45 @@
 <h2 id="没有预警机制"><a href="#没有预警机制" class="headerlink" title="没有预警机制"></a>没有预警机制</h2><p>当性能、内存、io等不足时没有提早告知进行准备</p>
 <h2 id="定位方法落后"><a href="#定位方法落后" class="headerlink" title="定位方法落后"></a>定位方法落后</h2><p>采用原始的vistual stdio 调试，没有分析dump的能力</p>
 <h2 id="msmq-功能扩展、维护、定位麻烦"><a href="#msmq-功能扩展、维护、定位麻烦" class="headerlink" title="msmq 功能扩展、维护、定位麻烦"></a>msmq 功能扩展、维护、定位麻烦</h2><h2 id="服务的管理、配置落后"><a href="#服务的管理、配置落后" class="headerlink" title="服务的管理、配置落后"></a>服务的管理、配置落后</h2><h2 id="整体架构缺陷"><a href="#整体架构缺陷" class="headerlink" title="整体架构缺陷"></a>整体架构缺陷</h2><p>这个涉及点比较多，后续慢慢展开。</p>
-<h1 id="整改原因"><a href="#整改原因" class="headerlink" title="整改原因"></a>整改原因</h1><p>无他，就是”工匠精神“。既然做就做到我力所能及。</p>
+<h1 id="整改原因"><a href="#整改原因" class="headerlink" title="整改原因"></a>整改原因</h1><p>就是想做！！</p>
 <h1 id="优化点"><a href="#优化点" class="headerlink" title="优化点"></a>优化点</h1><h2 id="升级开发工具到vs2013"><a href="#升级开发工具到vs2013" class="headerlink" title="升级开发工具到vs2013"></a>升级开发工具到vs2013</h2><h2 id="服务性能监控"><a href="#服务性能监控" class="headerlink" title="服务性能监控"></a>服务性能监控</h2><p>服务消息堆积数量、进程cpu、磁盘容量、提交内存大小 数据到大数据平台。<br>出现问题时，基本都是第一时间就能够在钉钉收到预警通知。</p>
 <h2 id="使用jenkins进行持续集成"><a href="#使用jenkins进行持续集成" class="headerlink" title="使用jenkins进行持续集成"></a>使用jenkins进行持续集成</h2><h2 id="windbg分析的持续培训"><a href="#windbg分析的持续培训" class="headerlink" title="windbg分析的持续培训"></a>windbg分析的持续培训</h2><h2 id="C-的优化"><a href="#C-的优化" class="headerlink" title="C++的优化"></a>C++的优化</h2><p>原来都采用的MFC的CMap、CString、线程、锁等都需要替换为stl、boost类型</p>
-<h2 id="调整架构，支持灰度发布"><a href="#调整架构，支持灰度发布" class="headerlink" title="调整架构，支持灰度发布"></a>调整架构，支持灰度发布</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这一步是工作量最大的，目前还在持续优化中</span><br></pre></td></tr></table></figure>
-<p>我暂时的架构是这样的：<br><img src="https://upload-images.jianshu.io/upload_images/16010422-2abc063ab93dc9da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="优化后的架构"></p>
+<h2 id="调整架构，支持灰度发布"><a href="#调整架构，支持灰度发布" class="headerlink" title="调整架构，支持灰度发布"></a>调整架构，支持灰度发布</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">目前还在持续优化中</span><br></pre></td></tr></table></figure>
+<p>设计的方法：</p>
 <ul>
+<li><p>模块设计“幂等性”</p>
+</li>
+<li><p>服务尽量无状态<br>这样游戏、玩家可以随机指定链接，然后引入负载均衡+域名管理，就可以方便地地给服务器导流，支持灰度升级</p>
+</li>
+<li><p>重试次数控制 + 熔断</p>
+</li>
+<li><p>redis缓存、MQ 异步</p>
+</li>
+<li><p>隔离设计</p>
+</li>
 <li><p>将影响玩家的业务和统计业务，中间搭建 actik中转服务隔离开来<br>所有下游统计业务都需要经过actik服务进行清洗，然后才能到具体的业务服务中去</p>
 </li>
 <li><p>玩家隔离<br>比如将pc、移动、微信玩家连接的服务进行隔离，减少影响面。</p>
 </li>
-<li><p>block、check服务使用无状态开发<br>这样游戏、玩家可以随机指定链接，然后引入负载均衡+域名管理，就可以方便地地给服务器导流，支持灰度升级</p>
-</li>
 <li><p>使用rabbitmq替换msmq<br>rabbitmq支持AMQP协议，扩展、管理、维护都非常方便</p>
 </li>
-<li><p>数据库的优化<br>分库、分表；购买新硬件、数据备份、导入导出</p>
+<li><p>数据库的优化<br>分库、分表；购买新硬件、数据备份、导入导出<br>使用mqsql 替换sql server</p>
 </li>
 </ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>无意间看到一篇服务弹力设计的文章，总结的比我好，自己就是朝这个方向在调整！</p>
+<p><img src="/images/pasted-2.png" alt="upload successful"></p>
 <h2 id="后续计划"><a href="#后续计划" class="headerlink" title="后续计划"></a>后续计划</h2><ul>
-<li><p>引入稳定的gate服务<br>网关gate服务用户处理玩家的链接，不处理任何业务，所以只要gate不重启，服务中任何服务异常，玩家都不会有断开的影响。<br>同时支持负载均衡+域名管理，方便导流</p>
+<li><p>引入稳定的gate服务</p>
 </li>
 <li><p>统一配置中心</p>
 </li>
-<li><p>kub、sub灰度升级、扩展方案</p>
-</li>
 <li><p>linux化</p>
 </li>
-<li><p>部分服务go语言化</p>
+<li><p>服务go语言化</p>
 </li>
 </ul>
 <h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><ul>
-<li>基础服务稳定性提高非常明显，两年基本就没出现过重大事故。</li>
+<li>基础服务稳定性提高非常明显，两年就没出现过重大事故。</li>
 <li>升级也方便了很多，大部分都可以灰度升级。</li>
 <li>线上出现问题也能快速定位，出现问题心不慌。</li>
 </ul>
@@ -633,7 +638,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">59</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -656,7 +661,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -711,7 +718,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的架构"><span class="nav-number">2.</span> <span class="nav-text">早期的架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不合理的地方"><span class="nav-number">3.</span> <span class="nav-text">不合理的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生产工具落后"><span class="nav-number">3.1.</span> <span class="nav-text">生产工具落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有持续集成环境"><span class="nav-number">3.2.</span> <span class="nav-text">没有持续集成环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务无法灰度升级"><span class="nav-number">3.3.</span> <span class="nav-text">服务无法灰度升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单个服务异常影响整体"><span class="nav-number">3.4.</span> <span class="nav-text">单个服务异常影响整体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体服务容错性不足"><span class="nav-number">3.5.</span> <span class="nav-text">整体服务容错性不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有健康监控功能"><span class="nav-number">3.6.</span> <span class="nav-text">没有健康监控功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有预警机制"><span class="nav-number">3.7.</span> <span class="nav-text">没有预警机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定位方法落后"><span class="nav-number">3.8.</span> <span class="nav-text">定位方法落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#msmq-功能扩展、维护、定位麻烦"><span class="nav-number">3.9.</span> <span class="nav-text">msmq 功能扩展、维护、定位麻烦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务的管理、配置落后"><span class="nav-number">3.10.</span> <span class="nav-text">服务的管理、配置落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体架构缺陷"><span class="nav-number">3.11.</span> <span class="nav-text">整体架构缺陷</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整改原因"><span class="nav-number">4.</span> <span class="nav-text">整改原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化点"><span class="nav-number">5.</span> <span class="nav-text">优化点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#升级开发工具到vs2013"><span class="nav-number">5.1.</span> <span class="nav-text">升级开发工具到vs2013</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务性能监控"><span class="nav-number">5.2.</span> <span class="nav-text">服务性能监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用jenkins进行持续集成"><span class="nav-number">5.3.</span> <span class="nav-text">使用jenkins进行持续集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windbg分析的持续培训"><span class="nav-number">5.4.</span> <span class="nav-text">windbg分析的持续培训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-的优化"><span class="nav-number">5.5.</span> <span class="nav-text">C++的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调整架构，支持灰度发布"><span class="nav-number">5.6.</span> <span class="nav-text">调整架构，支持灰度发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续计划"><span class="nav-number">5.7.</span> <span class="nav-text">后续计划</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#效果"><span class="nav-number">6.</span> <span class="nav-text">效果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#早期的架构"><span class="nav-number">2.</span> <span class="nav-text">早期的架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不合理的地方"><span class="nav-number">3.</span> <span class="nav-text">不合理的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生产工具落后"><span class="nav-number">3.1.</span> <span class="nav-text">生产工具落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有持续集成环境"><span class="nav-number">3.2.</span> <span class="nav-text">没有持续集成环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务无法灰度升级"><span class="nav-number">3.3.</span> <span class="nav-text">服务无法灰度升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单个服务异常影响整体"><span class="nav-number">3.4.</span> <span class="nav-text">单个服务异常影响整体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体服务容错性不足"><span class="nav-number">3.5.</span> <span class="nav-text">整体服务容错性不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有健康监控功能"><span class="nav-number">3.6.</span> <span class="nav-text">没有健康监控功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没有预警机制"><span class="nav-number">3.7.</span> <span class="nav-text">没有预警机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定位方法落后"><span class="nav-number">3.8.</span> <span class="nav-text">定位方法落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#msmq-功能扩展、维护、定位麻烦"><span class="nav-number">3.9.</span> <span class="nav-text">msmq 功能扩展、维护、定位麻烦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务的管理、配置落后"><span class="nav-number">3.10.</span> <span class="nav-text">服务的管理、配置落后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体架构缺陷"><span class="nav-number">3.11.</span> <span class="nav-text">整体架构缺陷</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#整改原因"><span class="nav-number">4.</span> <span class="nav-text">整改原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化点"><span class="nav-number">5.</span> <span class="nav-text">优化点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#升级开发工具到vs2013"><span class="nav-number">5.1.</span> <span class="nav-text">升级开发工具到vs2013</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务性能监控"><span class="nav-number">5.2.</span> <span class="nav-text">服务性能监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用jenkins进行持续集成"><span class="nav-number">5.3.</span> <span class="nav-text">使用jenkins进行持续集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windbg分析的持续培训"><span class="nav-number">5.4.</span> <span class="nav-text">windbg分析的持续培训</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-的优化"><span class="nav-number">5.5.</span> <span class="nav-text">C++的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调整架构，支持灰度发布"><span class="nav-number">5.6.</span> <span class="nav-text">调整架构，支持灰度发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续计划"><span class="nav-number">5.8.</span> <span class="nav-text">后续计划</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#效果"><span class="nav-number">6.</span> <span class="nav-text">效果</span></a></li></ol></div>
             
 
           </div>

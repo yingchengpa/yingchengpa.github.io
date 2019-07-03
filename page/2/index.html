@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/08/C-EH-exception/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/18/开启代码优化分析dump/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -359,7 +359,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/08/C-EH-exception/" class="post-title-link" itemprop="url">C++ EH exception</a>
+                <a href="/2019/06/18/开启代码优化分析dump/" class="post-title-link" itemprop="url">开启代码优化分析dump</a>
               
             
           </h1>
@@ -384,7 +384,7 @@
                 
               
 
-              <time title="创建时间：2019-05-08 14:58:00 / 修改时间：14:58:23" itemprop="dateCreated datePublished" datetime="2019-05-08T14:58:00+08:00">2019-05-08</time>
+              <time title="创建时间：2019-06-18 14:50:00 / 修改时间：15:43:24" itemprop="dateCreated datePublished" datetime="2019-06-18T14:50:00+08:00">2019-06-18</time>
             
 
             
@@ -444,14 +444,14 @@
         
           
             <p>
-              介绍某个代理服务器在压力测试时发生异常，以下是定位过程
-保存dump因为提早有知道程序会出现异常，所以中间省去了很多步骤，在服务启动时就已经使用windbg attach到了服务进程上，这样一旦程序触发异常windbg立即就会捕获。dump下载：链接：https://pan.baidu.com/s/
+              背景前面都是讲解程序未开启优化时的问题定位。当程序未开启优化时，通过‘local’，‘watch’,’kv’ 的参数信息都是正确的，所以很容易可以通过变量的内容确定问题的原因。
+但是如果开启了程序优化功能，那么编译器会优化代码的结构，windbg还是按照原来的方法来解析变量，那么大多情况会出现不正确
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/08/C-EH-exception/#more" rel="contents">
+              <a class="btn" href="/2019/06/18/开启代码优化分析dump/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -511,7 +511,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/08/windows下c-反射功能/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/13/ini-解析器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -531,7 +531,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/08/windows下c-反射功能/" class="post-title-link" itemprop="url">windows下c++反射功能</a>
+                <a href="/2019/06/13/ini-解析器/" class="post-title-link" itemprop="url">ini 解析器</a>
               
             
           </h1>
@@ -556,7 +556,7 @@
                 
               
 
-              <time title="创建时间：2019-05-08 14:54:00 / 修改时间：14:54:33" itemprop="dateCreated datePublished" datetime="2019-05-08T14:54:00+08:00">2019-05-08</time>
+              <time title="创建时间：2019-06-13 17:20:00 / 修改时间：17:25:35" itemprop="dateCreated datePublished" datetime="2019-06-13T17:20:00+08:00">2019-06-13</time>
             
 
             
@@ -616,14 +616,33 @@
         
           
             <p>
-              背景c++开发的软件在生产环境中运行出现一些bug，比如参数错误等问题，通过日志只能打印异常的行号或函数，但具体的结构体/类的参数内容打印却非常麻烦，无法做到一些更高级语言的反射功能。要做到能够通过变量地址就打印变量的内容信息，就需要依赖ms提供的msdia120.dll和程序编译后的pdb文件。
+              介绍windows 的ini读取使用 GetPrivateProfileInt等函数，需要切换到跨平台接口
+比较对象
+windows函数
+iniDoc类
+simpleini
+boost 属性树
 
+测试数据
+10w 次读操作
+ini 大小10k
+
+
+
+
+库
+读性能 (ms)
+
+
+
+
+boost 属性树
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/08/windows下c-反射功能/#more" rel="contents">
+              <a class="btn" href="/2019/06/13/ini-解析器/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -683,7 +702,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/08/搭建pdb服务器/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/13/消息队列-性能比较/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -703,7 +722,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/08/搭建pdb服务器/" class="post-title-link" itemprop="url">搭建pdb服务器</a>
+                <a href="/2019/06/13/消息队列-性能比较/" class="post-title-link" itemprop="url">消息队列 性能比较</a>
               
             
           </h1>
@@ -728,526 +747,7 @@
                 
               
 
-              <time title="创建时间：2019-05-08 09:41:00 / 修改时间：09:49:30" itemprop="dateCreated datePublished" datetime="2019-05-08T09:41:00+08:00">2019-05-08</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              背景目前使用jenkins进行每日编译、部署，但是一旦程序出现异常后，查找正确的pdb文件也是件麻烦的事情，所以希望能有微软符号服务器一样的功能。
-步骤通过google 查找一些资料，自己尝试了下，还是比较简单的.
-安装windbg环境变量path 中设置windbg路径。
-准备一块大硬盘会保存很多
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/08/搭建pdb服务器/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/踩内存（内存溢出）的异常定位/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/07/踩内存（内存溢出）的异常定位/" class="post-title-link" itemprop="url">踩内存（内存溢出）的异常定位</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-07 19:25:00 / 修改时间：19:25:22" itemprop="dateCreated datePublished" datetime="2019-05-07T19:25:00+08:00">2019-05-07</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              介绍某天晚上11点，钉钉预警提示某服务catch到一个异常导致服务重启，因为是上线了一个多月的服务，半夜遇到这样的问题，整个人有点懵，立刻打开电脑下载dump文件进行分析，不幸的是在分析的过程中，又连续的出现了几次崩溃，在这么反复崩溃、重启折腾了1小时左右，服务终于正常了。
-分析dump下载路径：链
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/踩内存（内存溢出）的异常定位/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/windbg分析内存泄漏/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/07/windbg分析内存泄漏/" class="post-title-link" itemprop="url">windbg分析内存泄漏</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-07 19:24:00 / 修改时间：19:24:41" itemprop="dateCreated datePublished" datetime="2019-05-07T19:24:00+08:00">2019-05-07</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              介绍本文主要介绍一种通过windbg分析内存泄漏的方法。
-现象后台检测程序在某天上报了告警，大概就是某程序的提交内存达到了1.0G。登陆后台查看，该进程已经运行了90天，提交内存每天都在持续上涨，从启动到目前为止大概累计上升了800M。应该是存在内存泄漏。让运维通过工具保存了fulldump
-准备工
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/windbg分析内存泄漏/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/windbg分析临界区死锁/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/07/windbg分析临界区死锁/" class="post-title-link" itemprop="url">windbg分析临界区死锁</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-07 19:22:00" itemprop="dateCreated datePublished" datetime="2019-05-07T19:22:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-06-13 17:08:00" itemprop="dateCreated datePublished" datetime="2019-06-13T17:08:00+08:00">2019-06-13</time>
             
 
             
@@ -1264,7 +764,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-28 18:37:52" itemprop="dateModified" datetime="2019-05-28T18:37:52+08:00">2019-05-28</time>
+                <time title="修改时间：2019-06-19 09:07:43" itemprop="dateModified" datetime="2019-06-19T09:07:43+08:00">2019-06-19</time>
               
             
           </span>
@@ -1319,25 +819,15 @@
         
           
             <p>
-              介绍多线程编程中，对于资源同步导致的死锁问题，应该是开发过程中经常碰到的，同时在问题定位过程中也会花费大量的时间，这里就介绍下如何通过windbg来分析死锁问题。
-资源同步windows下资源同步的方法主要是
-
-原子访问
-临界区
-读写锁
-旋转锁
-等待函数
-事件
-信号量
-互斥量
-
-其中最常用的应该是临
+              介绍windows下使用的是postthreadmessage、getmessage,考虑要跨平台，所以打算自己实现消息队列
+备选方案std::list + std::mutexboost::lockfree::queueboost::lockfree::spsc_queue测试性能方法
+生产500
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/windbg分析临界区死锁/#more" rel="contents">
+              <a class="btn" href="/2019/06/13/消息队列-性能比较/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1397,7 +887,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/异常引起的死锁/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/13/vs2019-创建linux项目/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -1417,7 +907,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/07/异常引起的死锁/" class="post-title-link" itemprop="url">异常引起的死锁</a>
+                <a href="/2019/06/13/vs2019-创建linux项目/" class="post-title-link" itemprop="url">vs2019 创建linux项目</a>
               
             
           </h1>
@@ -1442,7 +932,7 @@
                 
               
 
-              <time title="创建时间：2019-05-07 19:22:00 / 修改时间：19:22:23" itemprop="dateCreated datePublished" datetime="2019-05-07T19:22:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-06-13 15:48:00 / 修改时间：15:59:08" itemprop="dateCreated datePublished" datetime="2019-06-13T15:48:00+08:00">2019-06-13</time>
             
 
             
@@ -1502,15 +992,15 @@
         
           
             <p>
-              介绍一个json异常导致的死锁分析。同事某天求助帮忙分析一个死锁dump，按照之前查找临界区的方法，他已经具体定位到了某个线程，但是线程打印的堆栈信息却令他没有头绪。
-准备工作dump下载地址（提取码：ndel）
-步骤1按照之前的方法1）、~*kv  打印所有线程堆栈2）、遍历线程内容，找到可疑点3
+              背景计划将公司的部分稳定服务切换到linux环境下
+以前linux下的开发方式是  ssh + samb + source insight + makefile + g++。在windows下用 source insight看代码，然后ssh到centos 服务器上，然后执行编译。
+现在看到vs20
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/异常引起的死锁/#more" rel="contents">
+              <a class="btn" href="/2019/06/13/vs2019-创建linux项目/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1570,7 +1060,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/使用CMap导致服务高CPU/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/31/魔鬼经济学（3）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -1590,7 +1080,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/07/使用CMap导致服务高CPU/" class="post-title-link" itemprop="url">使用CMap导致服务高CPU</a>
+                <a href="/2019/05/31/魔鬼经济学（3）/" class="post-title-link" itemprop="url">魔鬼经济学（3）</a>
               
             
           </h1>
@@ -1615,12 +1105,24 @@
                 
               
 
-              <time title="创建时间：2019-05-07 19:21:00 / 修改时间：19:21:50" itemprop="dateCreated datePublished" datetime="2019-05-07T19:21:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-31 08:58:00" itemprop="dateCreated datePublished" datetime="2019-05-31T08:58:00+08:00">2019-05-31</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-18 11:41:33" itemprop="dateModified" datetime="2019-06-18T11:41:33+08:00">2019-06-18</time>
               
             
           </span>
@@ -1637,7 +1139,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
 
                 
                 
@@ -1675,14 +1177,17 @@
         
           
             <p>
-              某天某服务预警一直提示某服务性能不足，cpu已满负荷。很是纳闷，这个服务是纯内存数据，没有io操作；而且都运行了快3个月了，怎么突然就性能不足了？
-步骤1半夜从睡梦中被叫醒，先自己缕一缕思路（整个人都是懵的，基本缕不出思路），先解决线上问题， 让运维保存了一份fulldump，然后重启服务，线上正常
+              读书时间2019/05/11 ~ 2019/06/18
+像魔鬼一样思考承认自己不知道下次当你面对不懂的问题时，请直说“我不知道”。当然，可以加一句—-“但或许我可以找到答案。”然后尽你所能寻找答案。你会惊讶地发现人们是多么欢迎你的坦诚。
+你的问题是什么吸取两个广义的经验：
+
+关于解决问题的一般方式。
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/使用CMap导致服务高CPU/#more" rel="contents">
+              <a class="btn" href="/2019/05/31/魔鬼经济学（3）/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1742,7 +1247,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/捕获异常并自动保存dump/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/30/架构优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -1762,7 +1267,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/07/捕获异常并自动保存dump/" class="post-title-link" itemprop="url">捕获异常并自动保存dump</a>
+                <a href="/2019/05/30/架构优化/" class="post-title-link" itemprop="url">C++架构优化</a>
               
             
           </h1>
@@ -1787,12 +1292,24 @@
                 
               
 
-              <time title="创建时间：2019-05-07 19:15:00 / 修改时间：19:20:36" itemprop="dateCreated datePublished" datetime="2019-05-07T19:15:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-30 15:18:00" itemprop="dateCreated datePublished" datetime="2019-05-30T15:18:00+08:00">2019-05-30</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-24 17:18:17" itemprop="dateModified" datetime="2019-06-24T17:18:17+08:00">2019-06-24</time>
               
             
           </span>
@@ -1847,14 +1364,14 @@
         
           
             <p>
-              SetUnhandledExceptionFilter 捕获的异常有限，比如ctr异常、栈溢出的异常就无法捕获。
-/************************************************************************//* 之所以应用程序捕获不到栈溢出异常
+              背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。
+游戏基础服务一旦出现问题，
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/捕获异常并自动保存dump/#more" rel="contents">
+              <a class="btn" href="/2019/05/30/架构优化/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1914,7 +1431,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/07/简单分析minidump-2/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/28/精益产品开发/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -1934,7 +1451,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/07/简单分析minidump-2/" class="post-title-link" itemprop="url">简单分析minidump(2)</a>
+                <a href="/2019/05/28/精益产品开发/" class="post-title-link" itemprop="url">精益产品开发</a>
               
             
           </h1>
@@ -1959,7 +1476,7 @@
                 
               
 
-              <time title="创建时间：2019-05-07 17:31:00 / 修改时间：17:32:08" itemprop="dateCreated datePublished" datetime="2019-05-07T17:31:00+08:00">2019-05-07</time>
+              <time title="创建时间：2019-05-28 18:28:00 / 修改时间：18:31:04" itemprop="dateCreated datePublished" datetime="2019-05-28T18:28:00+08:00">2019-05-28</time>
             
 
             
@@ -1981,7 +1498,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
 
                 
                 
@@ -2019,14 +1536,537 @@
         
           
             <p>
-              有了前几节的准备工作，我们的程序已经可以自动捕获异常了，那么我们开始通过windbg来分析dump解决实际问题。先从简单入手，CString大小写转化导致的异常（提取码ffk6）。
-步骤1使用windbg打开minidump，设置好应用程序的pdb， 执行命令 “.ecxr” 、”kv” ,打印如下
+              读书时间：2019年3月
+人们认识到，遵循严格生命周期的概念，把开发分割为顺序阶段构成的过程，实施起来不现实，造成了以下直接的危害。
+1、希望通过各个阶段设置关卡，严格控制，以期更早地发现问题，却滞后了集成和测试，让错误的发现延迟到最后，这是很多项目失败的根源。
+2、希望一开始就能设定完整和正确的需
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/07/简单分析minidump-2/#more" rel="contents">
+              <a class="btn" href="/2019/05/28/精益产品开发/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/28/未来简史/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/28/未来简史/" class="post-title-link" itemprop="url">未来简史</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-28 18:23:00 / 修改时间：18:31:28" itemprop="dateCreated datePublished" datetime="2019-05-28T18:23:00+08:00">2019-05-28</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              读书时间：2019年3月
+1、研究历史，就是为了挣脱过去的桎梏，让我们能看向不同的方向，并开始注意到前人无法想象或过去不希望我们想象到的可能性。观察我们走到现在的一连串意外事件，就能了解人类的每个念头和梦想是如何变成现实的，然后我们就能开始以不同的方式思考并编织出不同的梦想。研究历史并不能告诉我们应
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/28/未来简史/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/27/魔鬼经济学（2）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/27/魔鬼经济学（2）/" class="post-title-link" itemprop="url">魔鬼经济学（2）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-27 08:51:00 / 修改时间：08:54:39" itemprop="dateCreated datePublished" datetime="2019-05-27T08:51:00+08:00">2019-05-27</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              读书时间：2019/05/09 – 2019/05/27
+魔鬼经济学==慌谬怪诞经济学？
+酒后步行比酒后驾车还要危险！
+电视把印度女性解救了出来？
+
+遏制气候变暖：火山喷发，用烟囱捅破天，还是架一根18英里长的管子？恐怖分子的银行账号有什么特点？
+想长寿吗？拿个诺贝尔奖吧也有一些方式是可以延长你的寿
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/27/魔鬼经济学（2）/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/10/醉汉的脚步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/10/醉汉的脚步/" class="post-title-link" itemprop="url">醉汉的脚步</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-10 09:35:00 / 修改时间：09:38:01" itemprop="dateCreated datePublished" datetime="2019-05-10T09:35:00+08:00">2019-05-10</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              读书时间2019/02/11 - 未完
+摘要顶着人类的直觉破浪而行，是一件困难的事。如所要看到的那样，人类头脑至构造，是要给每一个事情找出确定理由，因为它难以接受无关或随机因素所造成的影响。因此，我们首要要认识到，成败有时并非来自于过人的能力或无能，而是来自于如经济学家艾智仁所说的“幸运的环境”。 
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/10/醉汉的脚步/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2075,7 +2115,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2117,7 +2157,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">59</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2140,7 +2180,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
