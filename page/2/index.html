@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/18/开启代码优化分析dump/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/10/进程信息可视化方案/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -359,7 +359,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/18/开启代码优化分析dump/" class="post-title-link" itemprop="url">开启代码优化分析dump</a>
+                <a href="/2019/07/10/进程信息可视化方案/" class="post-title-link" itemprop="url">进程状态可视化方案</a>
               
             
           </h1>
@@ -384,7 +384,7 @@
                 
               
 
-              <time title="创建时间：2019-06-18 14:50:00 / 修改时间：15:43:24" itemprop="dateCreated datePublished" datetime="2019-06-18T14:50:00+08:00">2019-06-18</time>
+              <time title="创建时间：2019-07-10 11:09:00 / 修改时间：11:55:30" itemprop="dateCreated datePublished" datetime="2019-07-10T11:09:00+08:00">2019-07-10</time>
             
 
             
@@ -417,6 +417,19 @@
           
             
             
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/10/进程信息可视化方案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/10/进程信息可视化方案/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -444,14 +457,15 @@
         
           
             <p>
-              背景前面都是讲解程序未开启优化时的问题定位。当程序未开启优化时，通过‘local’，‘watch’,’kv’ 的参数信息都是正确的，所以很容易可以通过变量的内容确定问题的原因。
-但是如果开启了程序优化功能，那么编译器会优化代码的结构，windbg还是按照原来的方法来解析变量，那么大多情况会出现不正确
+              背景当出现问题时，我们收集无法查看历史的进程信息，比如前一小时的cpu利用率、内存使用量等信息。本方案结合大数据的elk系统提供可视化的报表数据。
+elk = Elasticsearch Logstash  Kibana  搭建一套集中式日志系统。
+每个进程定时5s上报进程状态到elk系统，然后通过
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/06/18/开启代码优化分析dump/#more" rel="contents">
+              <a class="btn" href="/2019/07/10/进程信息可视化方案/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -511,7 +525,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/13/ini-解析器/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/05/electron学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -531,7 +545,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/13/ini-解析器/" class="post-title-link" itemprop="url">ini 解析器</a>
+                <a href="/2019/07/05/electron学习/" class="post-title-link" itemprop="url">electron学习</a>
               
             
           </h1>
@@ -556,7 +570,7 @@
                 
               
 
-              <time title="创建时间：2019-06-13 17:20:00 / 修改时间：17:25:35" itemprop="dateCreated datePublished" datetime="2019-06-13T17:20:00+08:00">2019-06-13</time>
+              <time title="创建时间：2019-07-05 10:57:00 / 修改时间：16:12:28" itemprop="dateCreated datePublished" datetime="2019-07-05T10:57:00+08:00">2019-07-05</time>
             
 
             
@@ -578,7 +592,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
 
                 
                 
@@ -588,6 +602,19 @@
 
           
             
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/05/electron学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/05/electron学习/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -616,33 +643,15 @@
         
           
             <p>
-              介绍windows 的ini读取使用 GetPrivateProfileInt等函数，需要切换到跨平台接口
-比较对象
-windows函数
-iniDoc类
-simpleini
-boost 属性树
-
-测试数据
-10w 次读操作
-ini 大小10k
-
-
-
-
-库
-读性能 (ms)
-
-
-
-
-boost 属性树
+              介绍主要讲我第一次使用electron的感受，简直是非常糟心！
+安装步骤安装node.js设置npm代理npm --registry https://registry.npm.taobao.org info underscore
+electron 项目npm install时经常会下载卡死，然后报错
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/06/13/ini-解析器/#more" rel="contents">
+              <a class="btn" href="/2019/07/05/electron学习/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -702,7 +711,7 @@ boost 属性树
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/13/消息队列-性能比较/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/04/禅与摩托车维修艺术/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -722,7 +731,7 @@ boost 属性树
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/13/消息队列-性能比较/" class="post-title-link" itemprop="url">消息队列 性能比较</a>
+                <a href="/2019/07/04/禅与摩托车维修艺术/" class="post-title-link" itemprop="url">禅与摩托车维修艺术</a>
               
             
           </h1>
@@ -747,7 +756,7 @@ boost 属性树
                 
               
 
-              <time title="创建时间：2019-06-13 17:08:00" itemprop="dateCreated datePublished" datetime="2019-06-13T17:08:00+08:00">2019-06-13</time>
+              <time title="创建时间：2019-07-04 08:50:00" itemprop="dateCreated datePublished" datetime="2019-07-04T08:50:00+08:00">2019-07-04</time>
             
 
             
@@ -764,7 +773,7 @@ boost 属性树
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-19 09:07:43" itemprop="dateModified" datetime="2019-06-19T09:07:43+08:00">2019-06-19</time>
+                <time title="修改时间：2019-07-24 08:37:04" itemprop="dateModified" datetime="2019-07-24T08:37:04+08:00">2019-07-24</time>
               
             
           </span>
@@ -781,7 +790,7 @@ boost 属性树
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
 
                 
                 
@@ -792,363 +801,18 @@ boost 属性树
           
             
             
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              介绍windows下使用的是postthreadmessage、getmessage,考虑要跨平台，所以打算自己实现消息队列
-备选方案std::list + std::mutexboost::lockfree::queueboost::lockfree::spsc_queue测试性能方法
-生产500
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/06/13/消息队列-性能比较/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/13/vs2019-创建linux项目/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/06/13/vs2019-创建linux项目/" class="post-title-link" itemprop="url">vs2019 创建linux项目</a>
               
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-06-13 15:48:00 / 修改时间：15:59:08" itemprop="dateCreated datePublished" datetime="2019-06-13T15:48:00+08:00">2019-06-13</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/工作笔记/" itemprop="url" rel="index"><span itemprop="name">工作笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              背景计划将公司的部分稳定服务切换到linux环境下
-以前linux下的开发方式是  ssh + samb + source insight + makefile + g++。在windows下用 source insight看代码，然后ssh到centos 服务器上，然后执行编译。
-现在看到vs20
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/06/13/vs2019-创建linux项目/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/31/魔鬼经济学（3）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/31/魔鬼经济学（3）/" class="post-title-link" itemprop="url">魔鬼经济学（3）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-31 08:58:00" itemprop="dateCreated datePublished" datetime="2019-05-31T08:58:00+08:00">2019-05-31</time>
-            
-
-            
-              
-
-              
-                
+              <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                
-
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="fa fa-comment-o"></i>
                 </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-06-18 11:41:33" itemprop="dateModified" datetime="2019-06-18T11:41:33+08:00">2019-06-18</time>
-              
             
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/04/禅与摩托车维修艺术/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/04/禅与摩托车维修艺术/" itemprop="commentCount"></span>
+                </a>
               </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
             
           
 
@@ -1177,17 +841,15 @@ boost 属性树
         
           
             <p>
-              读书时间2019/05/11 ~ 2019/06/18
-像魔鬼一样思考承认自己不知道下次当你面对不懂的问题时，请直说“我不知道”。当然，可以加一句—-“但或许我可以找到答案。”然后尽你所能寻找答案。你会惊讶地发现人们是多么欢迎你的坦诚。
-你的问题是什么吸取两个广义的经验：
-
-关于解决问题的一般方式。
+              时间2019/07/04 ~/07/24
+介绍去年在某网站上看到有人推荐这本书，刚好自己也骑了一段时间的摩托，所以就买了这本书。今天翻开看了几页，还是非常有意思的。至于这本书有多好看，你自己来感受吧！
+书看了100多页，手贱google了一下“斐德洛”，奉劝大家不要google“斐德洛”，带着好奇看
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/31/魔鬼经济学（3）/#more" rel="contents">
+              <a class="btn" href="/2019/07/04/禅与摩托车维修艺术/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1247,7 +909,7 @@ boost 属性树
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/30/架构优化/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/03/如何养胃/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -1267,7 +929,7 @@ boost 属性树
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/30/架构优化/" class="post-title-link" itemprop="url">C++架构优化</a>
+                <a href="/2019/07/03/如何养胃/" class="post-title-link" itemprop="url">如何养胃</a>
               
             
           </h1>
@@ -1292,24 +954,1144 @@ boost 属性树
                 
               
 
-              <time title="创建时间：2019-05-30 15:18:00" itemprop="dateCreated datePublished" datetime="2019-05-30T15:18:00+08:00">2019-05-30</time>
+              <time title="创建时间：2019-07-03 09:20:00 / 修改时间：09:21:04" itemprop="dateCreated datePublished" datetime="2019-07-03T09:20:00+08:00">2019-07-03</time>
             
 
             
               
 
               
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/健康知识/" itemprop="url" rel="index"><span itemprop="name">健康知识</span></a></span>
+
                 
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                
-
                 <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
+                  <i class="fa fa-comment-o"></i>
                 </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/03/如何养胃/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/03/如何养胃/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              很多人都很担心自己的胃，比如不能饿啊，不能吃刺激食物，不能吃饭不规律，不能边吃饭边喝水等。其实人的胃是很耐抗的，人类的胃进化了几万代适应很多残酷的环境，也只有进100年人类才摆脱了饥饿的环境，胃就退化了？平时说的喝小米粥养胃，吃山药养胃都没有科学证据。正常人的胃怕四样东西：盐、酒、腌制食物、幽门螺旋
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/03/如何养胃/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/03/免疫力/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
                 
-                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-24 17:18:17" itemprop="dateModified" datetime="2019-06-24T17:18:17+08:00">2019-06-24</time>
+                <a href="/2019/07/03/免疫力/" class="post-title-link" itemprop="url">免疫力</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-03 09:18:00 / 修改时间：09:20:15" itemprop="dateCreated datePublished" datetime="2019-07-03T09:18:00+08:00">2019-07-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/健康知识/" itemprop="url" rel="index"><span itemprop="name">健康知识</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/03/免疫力/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/03/免疫力/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              免疫力是人体识别和抵御外来入侵的能力。对于小孩需要注意几点：
+
+顺产。婴儿从产道出来接触的都是妈妈身体里健康的细菌。
+
+不要用抗生素。
+
+不要过于清洁。
+
+多接触自然。
+
+
+婴幼儿体内的菌群非常重要，它们对免疫系统来说可以算是一个训练师的角色，它们种类多、特征多，就可以训练免疫系统识别外来入侵的能力
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/03/免疫力/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/03/蛋白质/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/03/蛋白质/" class="post-title-link" itemprop="url">蛋白质</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-03 09:18:00 / 修改时间：09:18:31" itemprop="dateCreated datePublished" datetime="2019-07-03T09:18:00+08:00">2019-07-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/健康知识/" itemprop="url" rel="index"><span itemprop="name">健康知识</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/03/蛋白质/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/03/蛋白质/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              蛋白质即使有某种神奇的功效，吃它也不能让它直接进入人体发挥作用，而是会再胃肠中被消化成氨基酸，再被人体吸收，所以不管吃的是什么蛋白质，结局都一样，都是消化成了组成蛋白质的氨基酸。组成蛋白质的氨基酸共有20种。有的蛋白质（鸡蛋、牛奶、肉类的蛋白质）含有全部的20种氨基酸，叫做完全蛋白质，营养价值高；而
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/03/蛋白质/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/03/黄疸/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/03/黄疸/" class="post-title-link" itemprop="url">黄疸</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-03 09:09:00 / 修改时间：09:10:14" itemprop="dateCreated datePublished" datetime="2019-07-03T09:09:00+08:00">2019-07-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/健康知识/" itemprop="url" rel="index"><span itemprop="name">健康知识</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/03/黄疸/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/03/黄疸/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              黄疸通常是肝脏等器官有疾病的症状，但是婴儿则不然。90%的新生儿在出生一天后会开始出现黄疸；这是因为新生儿红细胞数量多，更新快，因此胆红素高，但是肝脏功能还不完善，处理能力很低。一般持续两周左右黄疸消失。黄疸一般来说是无害的，但是持续时间过长，有可能会造成脑损伤。因此需要治疗，国际流行方法使用的是光
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/03/黄疸/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/03/妙趣横生-博弈论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/03/妙趣横生-博弈论/" class="post-title-link" itemprop="url">妙趣横生-博弈论</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-03 09:00:00 / 修改时间：09:08:43" itemprop="dateCreated datePublished" datetime="2019-07-03T09:00:00+08:00">2019-07-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/03/妙趣横生-博弈论/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/03/妙趣横生-博弈论/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              时间2019/06/29 ~ 2019/07/03
+感想看了1/3 看不下去了，主要是没有大块的时间来阅读消化，里面讲了很多博弈的例子。剩下的估计要等以后有时间再看了。摘录了其中比较好的观点：博弈论中最重要的教训：一个人必须理解对方的想法。在本性上，人们都倾向于以自我为中心，只关注自己的理解和自身的
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/03/妙趣横生-博弈论/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/03/信息来源介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/03/信息来源介绍/" class="post-title-link" itemprop="url">信息来源介绍</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-03 08:10:00 / 修改时间：09:22:50" itemprop="dateCreated datePublished" datetime="2019-07-03T08:10:00+08:00">2019-07-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/健康知识/" itemprop="url" rel="index"><span itemprop="name">健康知识</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/03/信息来源介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/03/信息来源介绍/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              收集了自己仅几年看到、听到、经历过的一些科学健康方法，信息来源：
+
+卓老板聊科技（得到app、喜马拉雅）
+
+方舟子书籍、音频节目（企鹅fm）
+
+哈弗家庭医生全书（推荐家中必备）
+
+默沙东诊疗手册（app、web）
+
+科普中国（app）
+
+丁香园
+
+科普书籍《肠子的小心思》 《众病之王-癌》
+
+goo
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/07/03/信息来源介绍/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/06/25/几种语言的http服务框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/25/几种语言的http服务框架/" class="post-title-link" itemprop="url">几种语言的http服务框架</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-25 08:53:00 / 修改时间：09:04:59" itemprop="dateCreated datePublished" datetime="2019-06-25T08:53:00+08:00">2019-06-25</time>
+            
+
+            
+              
+
               
             
           </span>
@@ -1337,177 +2119,18 @@ boost 属性树
           
             
             
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              背景介绍公司是一家小的游戏公司，日活百万左右，同时最高在线人数30w左右。公司的核心服务使用C++开发，生产环境是windows.游戏基础服务主要职责就是承载公司游戏的登陆、业务逻辑、通知、游戏数据结算、玩家信息统计等功能，而具体的游戏逻辑在各个游戏团队的游戏服务中负责。
-游戏基础服务一旦出现问题，
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/30/架构优化/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/28/精益产品开发/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/28/精益产品开发/" class="post-title-link" itemprop="url">精益产品开发</a>
               
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/06/25/几种语言的http服务框架/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/25/几种语言的http服务框架/" itemprop="commentCount"></span>
+                </a>
               </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-28 18:28:00 / 修改时间：18:31:04" itemprop="dateCreated datePublished" datetime="2019-05-28T18:28:00+08:00">2019-05-28</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
             
           
 
@@ -1536,537 +2159,18 @@ boost 属性树
         
           
             <p>
-              读书时间：2019年3月
-人们认识到，遵循严格生命周期的概念，把开发分割为顺序阶段构成的过程，实施起来不现实，造成了以下直接的危害。
-1、希望通过各个阶段设置关卡，严格控制，以期更早地发现问题，却滞后了集成和测试，让错误的发现延迟到最后，这是很多项目失败的根源。
-2、希望一开始就能设定完整和正确的需
+              介绍刚好需要做一个http服务，所以简单的研究了下几种语言http框架的入门使用
+C++libevent+http
+https://github.com/yingchengpa/httpsvr
+
+自己写了一个多线程版本的，封装了大部分功能，只要注册指定 uri的回调处理就可以了。
+性能、并发性良好。
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/28/精益产品开发/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/28/未来简史/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/28/未来简史/" class="post-title-link" itemprop="url">未来简史</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-28 18:23:00 / 修改时间：18:31:28" itemprop="dateCreated datePublished" datetime="2019-05-28T18:23:00+08:00">2019-05-28</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              读书时间：2019年3月
-1、研究历史，就是为了挣脱过去的桎梏，让我们能看向不同的方向，并开始注意到前人无法想象或过去不希望我们想象到的可能性。观察我们走到现在的一连串意外事件，就能了解人类的每个念头和梦想是如何变成现实的，然后我们就能开始以不同的方式思考并编织出不同的梦想。研究历史并不能告诉我们应
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/28/未来简史/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/27/魔鬼经济学（2）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/27/魔鬼经济学（2）/" class="post-title-link" itemprop="url">魔鬼经济学（2）</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-27 08:51:00 / 修改时间：08:54:39" itemprop="dateCreated datePublished" datetime="2019-05-27T08:51:00+08:00">2019-05-27</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              读书时间：2019/05/09 – 2019/05/27
-魔鬼经济学==慌谬怪诞经济学？
-酒后步行比酒后驾车还要危险！
-电视把印度女性解救了出来？
-
-遏制气候变暖：火山喷发，用烟囱捅破天，还是架一根18英里长的管子？恐怖分子的银行账号有什么特点？
-想长寿吗？拿个诺贝尔奖吧也有一些方式是可以延长你的寿
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/27/魔鬼经济学（2）/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/05/10/醉汉的脚步/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="睡在床板下">
-      <meta itemprop="description" content="世事多变，我心中自有主见">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="睡在床板下">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/10/醉汉的脚步/" class="post-title-link" itemprop="url">醉汉的脚步</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-10 09:35:00 / 修改时间：09:38:01" itemprop="dateCreated datePublished" datetime="2019-05-10T09:35:00+08:00">2019-05-10</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              读书时间2019/02/11 - 未完
-摘要顶着人类的直觉破浪而行，是一件困难的事。如所要看到的那样，人类头脑至构造，是要给每一个事情找出确定理由，因为它难以接受无关或随机因素所造成的影响。因此，我们首要要认识到，成败有时并非来自于过人的能力或无能，而是来自于如经济学家艾智仁所说的“幸运的环境”。 
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/10/醉汉的脚步/#more" rel="contents">
+              <a class="btn" href="/2019/06/25/几种语言的http服务框架/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2115,7 +2219,7 @@ boost 属性树
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2157,7 +2261,7 @@ boost 属性树
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-count">72</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2391,6 +2495,12 @@ boost 属性树
   
 
   
+  
+  <script id="dsq-count-scr" src="https://http-91dengdeng-cn.disqus.com/count.js" async></script>
+
+
+
+
 
 
 

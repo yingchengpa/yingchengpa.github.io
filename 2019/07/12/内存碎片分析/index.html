@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景在上篇文章中进程状态可视化方案搭建了可视化界面，对于目前运行环境下的几百个服务器状态就非常清晰了，比如服务的虚拟内存，这时就发现一个服务存在问题：  红色线为virtual Bytes  ，大概在1.4G左右绿色线为Private Bytes ， 大概在350M左右 那么应该是出现了严重的内存碎片（Fragmentation)。 往事在众多疑难问题定位过程中，我一直对刚参加工作时分析的一个内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存碎片分析">
+<meta property="og:url" content="http://www.91dengdeng.cn/2019/07/12/内存碎片分析/index.html">
+<meta property="og:site_name" content="睡在床板下">
+<meta property="og:description" content="背景在上篇文章中进程状态可视化方案搭建了可视化界面，对于目前运行环境下的几百个服务器状态就非常清晰了，比如服务的虚拟内存，这时就发现一个服务存在问题：  红色线为virtual Bytes  ，大概在1.4G左右绿色线为Private Bytes ， 大概在350M左右 那么应该是出现了严重的内存碎片（Fragmentation)。 往事在众多疑难问题定位过程中，我一直对刚参加工作时分析的一个内存">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.91dengdeng.cn/images/pasted-6.png">
+<meta property="og:updated_time" content="2019-07-24T01:42:20.563Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内存碎片分析">
+<meta name="twitter:description" content="背景在上篇文章中进程状态可视化方案搭建了可视化界面，对于目前运行环境下的几百个服务器状态就非常清晰了，比如服务的虚拟内存，这时就发现一个服务存在问题：  红色线为virtual Bytes  ，大概在1.4G左右绿色线为Private Bytes ， 大概在350M左右 那么应该是出现了严重的内存碎片（Fragmentation)。 往事在众多疑难问题定位过程中，我一直对刚参加工作时分析的一个内存">
+<meta name="twitter:image" content="http://www.91dengdeng.cn/images/pasted-6.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.91dengdeng.cn/2019/07/12/内存碎片分析/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>内存碎片分析 | 睡在床板下</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">睡在床板下</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">世事多变，我心中自有主见</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/07/12/内存碎片分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="睡在床板下">
+      <meta itemprop="description" content="世事多变，我心中自有主见">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="睡在床板下">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">内存碎片分析
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-12 08:59:00" itemprop="dateCreated datePublished" datetime="2019-07-12T08:59:00+08:00">2019-07-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-24 09:42:20" itemprop="dateModified" datetime="2019-07-24T09:42:20+08:00">2019-07-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/读书笔记/" itemprop="url" rel="index"><span itemprop="name">读书笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/07/12/内存碎片分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/07/12/内存碎片分析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在上篇文章中<br><a href="http://www.91dengdeng.cn/2019/07/10/%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF%E5%8F%AF%E8%A7%86%E5%8C%96%E6%96%B9%E6%A1%88/#more" title="123">进程状态可视化方案</a><br>搭建了可视化界面，对于目前运行环境下的几百个服务器状态就非常清晰了，比如服务的虚拟内存，这时就发现一个服务存在问题：</p>
+<p><img src="/images/pasted-6.png" alt="虚拟内存、提交内存"></p>
+<p>红色线为virtual Bytes  ，大概在1.4G左右<br>绿色线为Private Bytes ， 大概在350M左右</p>
+<p>那么应该是出现了严重的内存碎片（Fragmentation)。</p>
+<h2 id="往事"><a href="#往事" class="headerlink" title="往事"></a>往事</h2><p>在众多疑难问题定位过程中，我一直对刚参加工作时分析的一个内存碎片问题印象非常深刻，因为这个问题锻炼了我坚韧的耐力和大幅度技能的提升。</p>
+<p>刚工作的时候被分配到一个视频组件组，主要功能就是网络收流、报文解析、音视频解码、视频渲染、音频同步播放，和当时的视频播放软件最大的区别就是多窗口，最大支持128个视频流同时播放。</p>
+<p>当时一个大版本发布之后，长时间运行（1天）组件就会出现内存申请失败，这个问题刚好就交给我处理，当时整个公司都没有人会用分析dump，大家都是用vs进行调试，还有代码的回滚是不可能的，这个版本合入太多功能，其他团队、客户都等着这个版本呢。<br>所以我的思路</p>
+<ol>
+<li><p>第一步是减少问题复现的时间，通过3天左右的观察、验证，找到了业务流程，写了一个测试demo，将原来需要1天才复现的问题，减少到只需要2个小时左右。</p>
+</li>
+<li><p>在观察、验证的3天时间，查资料，找原因，把《windows核心编程》 内存方面仔细研读，上网找资料。大概可以锁定是内存碎片导致，而不是内存泄漏。</p>
+</li>
+<li><p>进行二分法对模块进行分解测试。所以短时间内我又要把整个组件的模块设计、流程学习一遍。</p>
+</li>
+<li><p>建立execl对测试结果数据进行分析</p>
+</li>
+<li><p>3~4 步骤坚持了1周左右。</p>
+</li>
+<li><p>大家可能都觉得应该能找到问题了吧？ 结论是 no， 没找到原因。</p>
+</li>
+</ol>
+<p>我们可以梳理下内存碎片的原因，大致就是 a、b 两个大小内存随机申请，最后会导致一个连续内存会被a、b大小内存随机分裂，最后有一个更大的C就无法申请到内存。如果采用二分划分，那么很有可能我们把C给排除了，把a、b 模块保留，这时候程序当然稳定运行，execl表格体现出来的就是这个a、b模块正常，但实际是存在问题的。</p>
+<p>现实的程序远比上面的例子复杂的多，模块、开源库、第三方依赖都得考虑，这也是当时整理了1周左右的数据仍然定位不到原因。</p>
+<p>问题的分析已经过去了1周半，却没有任何进展，手上堆积的事情也越来越多，这1周半几乎都是7~23点，身体、精神也吃不消，所以就换了一个同事重新整理execl；一周过后也是没有头绪。在这一周中，我赶完落后的项目进度，然后继续查找资料，在网上看到了一本《软件调试》的书籍，学习堆的知识，这一周客户、boss都催的紧，粗略的看完“堆”章节，里面有句话吸引到了我：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Heap中有两个参数</span><br><span class="line">1、HeapDeCommitFreeBlockThreshold</span><br><span class="line">2、HeapDecommitTotalFreeThreshold</span><br><span class="line"></span><br><span class="line">考虑到应用程序很可能还会立刻申请内存并减少与内存管理器的交互次数，内存释放时需要同时满足两个条件才能被立即解除提交</span><br><span class="line">1、释放的堆块超过HeapDeCommitFreeBlockThreshold的值（比如4KB）</span><br><span class="line">2、堆上的总空闲空间达到HeapDecommitTotalFreeThreshold（比如64K）</span><br><span class="line"></span><br><span class="line">否则，堆管理器会将这个块加到空闲块列表中，并更新堆管理器的总空闲值。</span><br></pre></td></tr></table></figure></p>
+<p>刚好我们的组件中有一个大小申请65535大小的空间，会不会因为刚好没到64K导致的？ 立刻把模块中的65535修改为65535+1， 经过验证后，程序还真稳定了……….其实也没根本解决问题，只是怀疑，所以内心一直觉的有所欠缺。</p>
+<p>工作实在太忙，能力也有限，解决之后也没时间总结这个问题，还有好多事情要加班干呢………</p>
+<p>之后的windows上项目基本就很少出现内存碎片的问题，所以就没有这方面的分析经验。</p>
+<h1 id="问题再次分析"><a href="#问题再次分析" class="headerlink" title="问题再次分析"></a>问题再次分析</h1><p>刚好有程序又出现了类似问题，所以试着用dump来分析。首先我对出现问题的程序代码一点不熟悉，所以我很难去构建复现条件，只能暂时通过dump来分析。</p>
+<p>上面截图显示了7天的内存变化，很稳定，有查看了30天的内存，基本也是一样，virtual size 还足够，Private Bytes也不高，所以问题的紧急程度不高，估摸着程序再继续运行一个月也没问题。保存了fulldump。</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>我们大致要了解内存申请的过程，commit、reserv、virtual size、Private Bytes的概念。<br>堆的三个重要结构体：HEAP、Segment、Enty。<br>不了解的话，可以先照猫画虎 来按步骤分析一遍。</p>
+<h2 id="dump下载"><a href="#dump下载" class="headerlink" title="dump下载"></a>dump下载</h2><p><a href="https://pan.baidu.com/s/1l-rFel7kwhSubAC2Buq6Fg" target="_blank" rel="noopener">下载</a><br>提取码：ykgb </p>
+<h2 id="windbg"><a href="#windbg" class="headerlink" title="windbg"></a>windbg</h2><h3 id="heap-s"><a href="#heap-s" class="headerlink" title="heap -s"></a>heap -s</h3><p>加载dump信息，输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; !heap -s</span><br><span class="line">SEGMENT HEAP ERROR: failed to initialize the extention</span><br><span class="line">LFH Key                   : 0x58b8f7f8</span><br><span class="line">Termination on corruption : DISABLED</span><br><span class="line">  Heap     Flags   Reserv  Commit  Virt   Free  List   UCR  Virt  Lock  Fast </span><br><span class="line">                    (k)     (k)    (k)     (k) length      blocks cont. heap </span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">002a0000 00000002 1246976 510132 1246976 261431  2450  1382    0    5d6   LFH</span><br><span class="line">    External fragmentation  51 % (2450 free blocks)</span><br><span class="line">    Virtual address fragmentation  59 % (1382 uncommited ranges)</span><br><span class="line">00590000 00001002    3136   1636   3136    860     6     3    0   471b   LFH</span><br><span class="line">    External fragmentation  52 % (6 free blocks)</span><br><span class="line">00490000 00001002     256      4    256      1     1     1    0      0      </span><br><span class="line">004d0000 00001002    1280    420   1280    122    50     2    0      0   LFH</span><br><span class="line">Virtual block: 032f0000 - 032f0000 (size 00000000)</span><br><span class="line">Virtual block: 05310000 - 05310000 (size 00000000)</span><br><span class="line">00910000 00001002    1280    556   1280    136     4     2    2      0   LFH</span><br><span class="line">00b20000 00001002      64     12     64      4     2     1    0      0      </span><br><span class="line">00110000 00001002      64      4     64      2     1     1    0      0      </span><br><span class="line">03120000 00001002      64      4     64      2     1     1    0      0      </span><br><span class="line">00520000 00011002     256      4    256      1     2     1    0      0      </span><br><span class="line">032b0000 00001002     256      4    256      1     2     1    0      0      </span><br><span class="line">034d0000 00001002    3328   1996   3328   1050    49     3    0      6   LFH</span><br><span class="line">    External fragmentation  52 % (49 free blocks)</span><br><span class="line">05420000 00001002      64     16     64     13     1     1    0      0      </span><br><span class="line">00960000 00001002    1088    212   1088     77     2     2    0      0      </span><br><span class="line">-----------------------------------------------------------------------------</span><br></pre></td></tr></table></figure></p>
+<p>也可以看出 002a0000 的resevr 比 commit 大了很多。</p>
+<p>ps:里面有“Virtual block:” 代表的是超过508K的内存是使用HeapVirtualAlloc申请的，其中（size 00000000）指的是找不到HEAP_VIRTUAL_ALLOC_ENTRY的结构体定义（不知道怎么解决）。</p>
+<h3 id="heap-a-002a0000"><a href="#heap-a-002a0000" class="headerlink" title="!heap -a 002a0000"></a>!heap -a 002a0000</h3><p>打印该堆段所有的内存信息，（截取一部分）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">Segment80 at 54790000:</span><br><span class="line">       Flags:           00000000</span><br><span class="line">       Base:            54790000</span><br><span class="line">       First Entry:     54790040</span><br><span class="line">       Last Entry:      55760000</span><br><span class="line">       Total Pages:     00000fd0</span><br><span class="line">       Total UnCommit:  00000b0f</span><br><span class="line">       Largest UnCommit:00000000</span><br><span class="line">       UnCommitted Ranges: (9)</span><br><span class="line"></span><br><span class="line">   Heap entries for Segment80 in Heap 002a0000</span><br><span class="line">        address: psize . size  flags   state (requested size)</span><br><span class="line">       54790000: 00000 . 00040 [101] - busy (3f)</span><br><span class="line">       54790040: 00040 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       547d0040: 40000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       54810040: 40000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       54850040: 40000 . 00fa0 [100]</span><br><span class="line">       54850fe0: 00fa0 . 00020 [111] - busy (1d)</span><br><span class="line">       54851000:      0063d000      - uncommitted bytes.</span><br><span class="line">       54e8e000: 00000 . 01000 [100]</span><br><span class="line">       54e8f000: 01000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       54ecf000: 40000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       54f0f000: 40000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       54f4f000: 40000 . 40fe0 [100]</span><br><span class="line">       54f8ffe0: 40fe0 . 00020 [111] - busy (1d)</span><br><span class="line">       54f90000:      000fe000      - uncommitted bytes.</span><br><span class="line">       5508e000: 00000 . 40000 [100]</span><br><span class="line">       550ce000: 40000 . 01000 [101] - busy (ff8) Internal </span><br><span class="line">       550cf000: 01000 . 40000 [100]</span><br><span class="line">       5510f000: 40000 . 20000 [101] - busy (1fff8) Internal </span><br><span class="line">       5512f000: 20000 . 10000 [101] - busy (fff8) Internal </span><br><span class="line">       5513f000: 10000 . 03fe0 [100]</span><br><span class="line">       55142fe0: 03fe0 . 00020 [111] - busy (1d)</span><br><span class="line">       55143000:      0000b000      - uncommitted bytes.</span><br><span class="line">       5514e000: 00000 . 40000 [100]</span><br><span class="line">       5518e000: 40000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       551ce000: 40000 . 00fe0 [100]</span><br><span class="line">       551cefe0: 00fe0 . 00020 [111] - busy (1d)</span><br><span class="line">       551cf000:      001ff000      - uncommitted bytes.</span><br><span class="line">       553ce000: 00000 . 40840 [100]</span><br><span class="line">       5540e840: 40840 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       5544e840: 40000 . 00400 [101] - busy (3f8) Internal </span><br><span class="line">       5544ec40: 00400 . 003a0 [100]</span><br><span class="line">       5544efe0: 003a0 . 00020 [111] - busy (1d)</span><br><span class="line">       5544f000:      000be000      - uncommitted bytes.</span><br><span class="line">       5550d000: 00000 . 01000 [100]</span><br><span class="line">       5550e000: 01000 . 40000 [101] - busy (3fff8) Internal </span><br><span class="line">       5554e000: 40000 . 40fe0 [100]</span><br><span class="line">       5558efe0: 40fe0 . 00020 [111] - busy (1d)</span><br><span class="line">       5558f000:      0000e000      - uncommitted bytes.</span><br><span class="line">       5559d000: 00000 . 00800 [100]</span><br><span class="line">       5559d800: 00800 . 10000 [101] - busy (fff8) Internal </span><br><span class="line">       555ad800: 10000 . 10000 [101] - busy (fff8) Internal </span><br><span class="line">       555bd800: 10000 . 407e0 [100]</span><br><span class="line">       555fdfe0: 407e0 . 00020 [111] - busy (1d)</span><br></pre></td></tr></table></figure></p>
+<p>简单的含义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Segment80 at 54790000:                ----- 第80个堆块链表</span><br><span class="line">       Flags:           00000000</span><br><span class="line">       Base:            54790000</span><br><span class="line">       First Entry:     54790040</span><br><span class="line">       Last Entry:      55760000</span><br><span class="line">       Total Pages:     00000fd0</span><br><span class="line">       Total UnCommit:  00000b0f</span><br><span class="line">       Largest UnCommit:00000000</span><br><span class="line">       UnCommitted Ranges: (9)    ------  有9个未提交的内存</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">address  : psize .      size         [flags]   state    (requested size)    &lt;debug flags&gt;</span><br><span class="line">堆块地址  前一堆块大小   当前堆块大小    状态     状态描述  用户实际分配的大小   哪种堆调试支持</span><br><span class="line"></span><br><span class="line">5544efe0: 003a0 . 00020 [111] - busy (1d)</span><br><span class="line">5544efe0: enty 的地址： 5544efe0+8 就是内存实际地址</span><br><span class="line">003a0: 上一个内存块的大小</span><br><span class="line">0020:  当前堆块大小</span><br><span class="line">busy： 使用中</span><br><span class="line">1d:   实际分配的大小</span><br></pre></td></tr></table></figure>
+<p>那么把所有链表统计一下大概出现了 1300多次的uncommitted bytes，其中大致浏览存在着1000多次的40000内存busy状态，基本上每个uncommitted 的内存附件都有一个40000的内存，那么是否可以怀疑是40000导致的呢？<br>40000的堆块大小实际用户申请大小是 3fff8，刚好是256K-8 。逐一查看内存内容也没有找到任何线索。</p>
+<p>至此dump的分析导致为此，剩下的过程就需要查看是哪里申请了这么大的内存？</p>
+<ol>
+<li>代码review</li>
+<li>用gflags打开栈回溯，问题复现后，通过内存地址进行栈回溯找到内存申请的代码</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>问题其实没有被定位，后续有时间会继续跟踪此问题。<br>事实上即使找到内存申请的地方，也不一定能解决。实际对于这种大块(&gt;4KB)的内存申请应该需要谨慎，写代码中也应该尽量避免大块内存的申请，可以考虑使用内存池；<br>windows本身是有低块堆来解决小内存的申请，但申请的内存大小有限；<br>偷懒可以直接使用jemalloc/tcmalloc库</p>
+<p>本文只是提供了一种分析思路。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wepay.png" alt="睡在床板下 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.png" alt="睡在床板下 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/10/进程信息可视化方案/" rel="next" title="进程状态可视化方案">
+                <i class="fa fa-chevron-left"></i> 进程状态可视化方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/12/问题的分析方法/" rel="prev" title="问题的分析方法">
+                问题的分析方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">睡在床板下</p>
+              <div class="site-description motion-element" itemprop="description">世事多变，我心中自有主见</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.jianshu.com/u/d459b1e37f2e" title="简书 &rarr; https://www.jianshu.com/u/d459b1e37f2e" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#往事"><span class="nav-number">1.1.</span> <span class="nav-text">往事</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题再次分析"><span class="nav-number">2.</span> <span class="nav-text">问题再次分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">2.1.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dump下载"><span class="nav-number">2.2.</span> <span class="nav-text">dump下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#windbg"><span class="nav-number">2.3.</span> <span class="nav-text">windbg</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#heap-s"><span class="nav-number">2.3.1.</span> <span class="nav-text">heap -s</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#heap-a-002a0000"><span class="nav-number">2.3.2.</span> <span class="nav-text">!heap -a 002a0000</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">睡在床板下</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+  <script id="dsq-count-scr" src="https://http-91dengdeng-cn.disqus.com/count.js" async></script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://www.91dengdeng.cn/2019/07/12/内存碎片分析/";
+    this.page.identifier = "2019/07/12/内存碎片分析/";
+    this.page.title = '内存碎片分析';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://http-91dengdeng-cn.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    loadComments();
+  
+</script>
+
+
+
+
+
+  
+    <script>
+  window.livereOptions = {
+    refer: '2019/07/12/内存碎片分析/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
