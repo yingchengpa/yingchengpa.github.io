@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="介绍windows下使用的是postthreadmessage、getmessage,考虑要跨平台，所以打算自己实现消息队列 无锁队列原理CAS操作——Compare &amp;amp; Set，或是 Compare &amp;amp; Swap，现在几乎所有的CPU指令都支持CAS的原子操作。 CAS的原子指令：12345678bool compare_and_swap (int *accum, int *de">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-16T10:07:43.422Z">
+<meta property="og:updated_time" content="2019-08-19T06:47:31.724Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="消息队列 性能比较">
 <meta name="twitter:description" content="介绍windows下使用的是postthreadmessage、getmessage,考虑要跨平台，所以打算自己实现消息队列 无锁队列原理CAS操作——Compare &amp;amp; Set，或是 Compare &amp;amp; Swap，现在几乎所有的CPU指令都支持CAS的原子操作。 CAS的原子指令：12345678bool compare_and_swap (int *accum, int *de">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-16 18:07:43" itemprop="dateModified" datetime="2019-08-16T18:07:43+08:00">2019-08-16</time>
+                <time title="修改时间：2019-08-19 14:47:31" itemprop="dateModified" datetime="2019-08-19T14:47:31+08:00">2019-08-19</time>
               
             
           </span>
@@ -521,7 +521,7 @@
 </tr>
 </tbody>
 </table>
-<p>单生产单消费模式下lockfree::spsc_queue 的确最优秀，但是我们的服务采用的是多生产单消费模式，所以还是暂时先用list+mutex</p>
+<p>单生产单消费模式下lockfree::spsc_queue 的确最优秀，但是我们的服务采用的是多生产单消费模式，所以还是暂时先用list+mutex。<br>单生产单消费者套在多生产单消费里面，会导致数据丢失。</p>
 
       
     </div>
@@ -673,7 +673,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">89</span>
+                    <span class="site-state-item-count">102</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -689,6 +689,8 @@
                     
                   
                     
+                    
+                      
                     
                       
                     

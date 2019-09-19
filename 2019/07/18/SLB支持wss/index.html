@@ -103,10 +103,13 @@
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="背景原本用boost::asio 做了一个支持tcp、ws、wss协议的网关，一个端口同时支持三种协议，区分的方法比较简单： 判断三次握手之后的第一字节的数据报文  0x16：wss // ssl协议的头  ‘G’：ws  ‘H’: tcp  //私有协议也有一个握手报文   现在担心自己ssl解析性能不够优秀，所以打算使用阿里slb的ssl解析 配置方法配置比较简单，使用“性能保障型SLB”，然">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-18T10:20:24.794Z">
+<meta property="og:image" content="http://www.91dengdeng.cn/images/pasted-16.png">
+<meta property="og:image" content="http://www.91dengdeng.cn/images/pasted-17.png">
+<meta property="og:updated_time" content="2019-08-21T03:04:23.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SLB支持wss">
 <meta name="twitter:description" content="背景原本用boost::asio 做了一个支持tcp、ws、wss协议的网关，一个端口同时支持三种协议，区分的方法比较简单： 判断三次握手之后的第一字节的数据报文  0x16：wss // ssl协议的头  ‘G’：ws  ‘H’: tcp  //私有协议也有一个握手报文   现在担心自己ssl解析性能不够优秀，所以打算使用阿里slb的ssl解析 配置方法配置比较简单，使用“性能保障型SLB”，然">
+<meta name="twitter:image" content="http://www.91dengdeng.cn/images/pasted-16.png">
 
 
 
@@ -382,12 +385,24 @@
                 
               
 
-              <time title="创建时间：2019-07-18 17:24:00 / 修改时间：18:20:24" itemprop="dateCreated datePublished" datetime="2019-07-18T17:24:00+08:00">2019-07-18</time>
+              <time title="创建时间：2019-07-18 17:24:00" itemprop="dateCreated datePublished" datetime="2019-07-18T17:24:00+08:00">2019-07-18</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-21 11:04:23" itemprop="dateModified" datetime="2019-08-21T11:04:23+08:00">2019-08-21</time>
               
             
           </span>
@@ -483,9 +498,17 @@
 <h1 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h1><p>使用 <a href="https://blog.csdn.net/zt3032/article/details/80492146" target="_blank" rel="noopener">https://blog.csdn.net/zt3032/article/details/80492146</a> 文章中测试https的结果。</p>
 <h2 id="slb"><a href="#slb" class="headerlink" title="slb"></a>slb</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">2019-07-18,16:27:57  0.002:0.003:0.057:0.000:0.057:0.063:0.063</span><br><span class="line">2019-07-18,16:27:58  0.001:0.003:0.048:0.000:0.048:0.055:0.055</span><br><span class="line">2019-07-18,16:27:59  0.002:0.005:0.051:0.000:0.051:0.057:0.057</span><br><span class="line">2019-07-18,16:28:00  0.002:0.003:0.050:0.000:0.050:0.055:0.055</span><br><span class="line">2019-07-18,16:28:01  0.002:0.003:0.049:0.000:0.049:0.054:0.054</span><br><span class="line">2019-07-18,16:28:02  0.002:0.003:0.052:0.000:0.052:0.058:0.058</span><br><span class="line">2019-07-18,16:28:03  0.002:0.003:0.050:0.000:0.050:0.056:0.056</span><br><span class="line">2019-07-18,16:28:04  0.002:0.003:0.051:0.000:0.051:0.057:0.057</span><br><span class="line">2019-07-18,16:28:05  0.002:0.003:0.050:0.000:0.050:0.057:0.057</span><br><span class="line">2019-07-18,16:28:06  0.001:0.003:0.049:0.000:0.049:0.055:0.055</span><br><span class="line">2019-07-18,16:28:07  0.001:0.003:0.048:0.000:0.048:0.053:0.053</span><br><span class="line">2019-07-18,16:28:08  0.002:0.003:0.052:0.000:0.052:0.058:0.058</span><br><span class="line">2019-07-18,16:28:09  0.001:0.003:0.049:0.000:0.049:0.055:0.055</span><br><span class="line">2019-07-18,16:28:11  0.001:0.003:0.049:0.000:0.049:0.055:0.055</span><br><span class="line">2019-07-18,16:28:12  0.001:0.003:0.052:0.000:0.052:0.058:0.058</span><br><span class="line">2019-07-18,16:28:13  0.002:0.003:0.049:0.000:0.049:0.055:0.055</span><br><span class="line">2019-07-18,16:28:14  0.002:0.003:0.049:0.000:0.049:0.055:0.055</span><br><span class="line">2019-07-18,16:28:15  0.002:0.003:0.053:0.000:0.053:0.059:0.059</span><br><span class="line">2019-07-18,16:28:16  0.001:0.003:0.050:0.000:0.050:0.055:0.055</span><br><span class="line">2019-07-18,16:28:17  0.002:0.003:0.048:0.000:0.048:0.053:0.053</span><br><span class="line">2019-07-18,16:28:18  0.001:0.003:0.056:0.000:0.056:0.061:0.061</span><br><span class="line">2019-07-18,16:28:19  0.002:0.003:0.050:0.000:0.050:0.056:0.056</span><br><span class="line">2019-07-18,16:28:20  0.001:0.003:0.048:0.000:0.048:0.053:0.053</span><br><span class="line">2019-07-18,16:28:21  0.002:0.003:0.051:0.000:0.051:0.057:0.057</span><br><span class="line">2019-07-18,16:28:22  0.002:0.004:0.051:0.000:0.051:0.058:0.058</span><br></pre></td></tr></table></figure>
 <h2 id="自己做解析"><a href="#自己做解析" class="headerlink" title="自己做解析"></a>自己做解析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">2019-07-18,17:57:04  0.002:0.002:0.073:0.000:0.073:0.074:0.074</span><br><span class="line">2019-07-18,17:57:06  0.002:0.002:0.071:0.000:0.071:0.072:0.072</span><br><span class="line">2019-07-18,17:57:07  0.002:0.002:0.072:0.000:0.072:0.072:0.072</span><br><span class="line">2019-07-18,17:57:08  0.002:0.002:0.072:0.000:0.072:0.073:0.073</span><br><span class="line">2019-07-18,17:57:09  0.002:0.002:0.072:0.000:0.072:0.072:0.072</span><br><span class="line">2019-07-18,17:57:10  0.002:0.002:0.075:0.000:0.075:0.076:0.076</span><br><span class="line">2019-07-18,17:57:11  0.002:0.002:0.075:0.000:0.075:0.076:0.076</span><br><span class="line">2019-07-18,17:57:12  0.002:0.002:0.074:0.000:0.074:0.075:0.075</span><br><span class="line">2019-07-18,17:57:13  0.002:0.002:0.074:0.000:0.074:0.075:0.075</span><br><span class="line">2019-07-18,17:57:14  0.002:0.002:0.072:0.000:0.072:0.073:0.073</span><br><span class="line">2019-07-18,17:57:15  0.002:0.002:0.075:0.000:0.075:0.076:0.076</span><br><span class="line">2019-07-18,17:57:16  0.001:0.002:0.072:0.000:0.072:0.072:0.072</span><br><span class="line">2019-07-18,17:57:17  0.001:0.002:0.074:0.000:0.074:0.075:0.075</span><br><span class="line">2019-07-18,17:57:19  0.002:0.002:0.072:0.000:0.072:0.073:0.073</span><br><span class="line">2019-07-18,17:57:20  0.001:0.003:0.072:0.000:0.072:0.073:0.073</span><br><span class="line">2019-07-18,17:57:21  0.002:0.002:0.070:0.000:0.070:0.071:0.071</span><br><span class="line">2019-07-18,17:57:22  0.001:0.002:0.071:0.000:0.071:0.072:0.072</span><br><span class="line">2019-07-18,17:57:23  0.002:0.002:0.071:0.000:0.071:0.072:0.072</span><br><span class="line">2019-07-18,17:57:24  0.001:0.002:0.070:0.000:0.070:0.071:0.071</span><br><span class="line">2019-07-18,17:57:25  0.002:0.002:0.071:0.000:0.071:0.072:0.072</span><br><span class="line">2019-07-18,17:57:26  0.001:0.002:0.071:0.000:0.071:0.072:0.072</span><br><span class="line">2019-07-18,17:57:27  0.002:0.002:0.071:0.000:0.071:0.071:0.071</span><br><span class="line">2019-07-18,17:57:28  0.001:0.002:0.072:0.000:0.072:0.073:0.073</span><br><span class="line">2019-07-18,17:57:29  0.001:0.002:0.070:0.000:0.070:0.071:0.071</span><br><span class="line">2019-07-18,17:57:30  0.002:0.002:0.083:0.000:0.083:0.084:0.084</span><br></pre></td></tr></table></figure>
+<h1 id="线上验证"><a href="#线上验证" class="headerlink" title="线上验证"></a>线上验证</h1><p>线上找了个某个微信小游戏做小白鼠，在wss链接步骤增加大数据埋点，用户的每次调用wss链接结果都上报大数据，然后进行统计，经过多天的测试，数据如下：</p>
+<h2 id="实验a"><a href="#实验a" class="headerlink" title="实验a"></a>实验a</h2><p>[微信client]—-wss—&gt;[slb+ssl]—-ws—&gt;[svr] </p>
+<p>成功率在 60% 左右。</p>
+<p><img src="/images/pasted-16.png" alt="upload successful"></p>
+<h2 id="实验b"><a href="#实验b" class="headerlink" title="实验b"></a>实验b</h2><p>[微信client]—-wss—-&gt;[slb]—-wss—&gt;[svr+ssl]</p>
+<p>成功率在 90% 左右。</p>
+<p><img src="/images/pasted-17.png" alt="upload successful"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
 <li>https返回502 其实我的测试工具不正确； 如果直接用wss测试工具是不会返回502的。</li>
-<li>slb性能视乎会好些，也不能排除ecs的性能不够，仅做参考。</li>
+<li>实验室中验证slb+ssl性能好20ms左右</li>
+<li>线上验证slb+ssl成功率不高（这个问题有时间分析下）</li>
 </ul>
 
       
@@ -638,7 +661,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">89</span>
+                    <span class="site-state-item-count">102</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -654,6 +677,8 @@
                     
                   
                     
+                    
+                      
                     
                       
                     
@@ -724,7 +749,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置方法"><span class="nav-number">2.</span> <span class="nav-text">配置方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#出现的问题"><span class="nav-number">3.</span> <span class="nav-text">出现的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#健康检测异常"><span class="nav-number">3.1.</span> <span class="nav-text">健康检测异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#https返回502"><span class="nav-number">3.2.</span> <span class="nav-text">https返回502</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#slb一个端口无法支持多个协议"><span class="nav-number">3.3.</span> <span class="nav-text">slb一个端口无法支持多个协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试数据"><span class="nav-number">4.</span> <span class="nav-text">测试数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#slb"><span class="nav-number">4.1.</span> <span class="nav-text">slb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自己做解析"><span class="nav-number">4.2.</span> <span class="nav-text">自己做解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置方法"><span class="nav-number">2.</span> <span class="nav-text">配置方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#出现的问题"><span class="nav-number">3.</span> <span class="nav-text">出现的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#健康检测异常"><span class="nav-number">3.1.</span> <span class="nav-text">健康检测异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#https返回502"><span class="nav-number">3.2.</span> <span class="nav-text">https返回502</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#slb一个端口无法支持多个协议"><span class="nav-number">3.3.</span> <span class="nav-text">slb一个端口无法支持多个协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试数据"><span class="nav-number">4.</span> <span class="nav-text">测试数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#slb"><span class="nav-number">4.1.</span> <span class="nav-text">slb</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自己做解析"><span class="nav-number">4.2.</span> <span class="nav-text">自己做解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线上验证"><span class="nav-number">5.</span> <span class="nav-text">线上验证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实验a"><span class="nav-number">5.1.</span> <span class="nav-text">实验a</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验b"><span class="nav-number">5.2.</span> <span class="nav-text">实验b</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
