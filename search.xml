@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[windows切linux过程]]></title>
+    <url>%2F2020%2F01%2F13%2Fwindows%E5%88%87linux%E8%BF%87%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[背景公司的服务一直是在windows下运行的，本身服务并不复杂，windows性能和稳定性表现也是不错的，有的服务器也快4年没重启过了，运行的还是挺好的。 这次切linux版本，原因只要是 技术的沉淀。服务端从windows到linux转变也算是一种趋势。 使用一些开源库。比如服务的管理、编排、治理…… windows下毕竟小众。 提升下主机性能、稳定性（这个没什么说服力）。 总之，就是要换到linux。 方案一之前的工作有过跨平台库的架构经验和开发经验，所以方案一无疑就是接口上的跨平台替换。主要是： 通讯库。 IOCP—&gt;boost::asio 数据结构。 CString/CMap —&gt; std::string/map 线程、锁。 _beginthreadex –&gt; std::thread/std::mutex 线程的消息队列。 postthreadmessage–&gt; 自定义消息队列 ini 配置文件的接口。 GetPrivateProfileInt —&gt;IniParser（开源库） 一些开源库。 如log4cpp、json、redis、rabbitmq、libcurl、protobuf、odbc…..本身就是跨平台的 公司原来的一些基础库 总之，难度不大，花点时间就行。 方案二在替换的过程中，搜到了一个中间件（winehq），官网的说明是这样的： Wine （“Wine Is Not an Emulator” 的首字母缩写）是一个能够在多种 POSIX-compliant 操作系统（诸如 Linux，macOS 及 BSD 等）上运行 Windows 应用的兼容层。Wine 不是像虚拟机或者模拟器一样模仿内部的 Windows 逻辑，而是將 Windows API 调用翻译成为动态的 POSIX 调用，免除了性能和其他一些行为的内存占用，让你能够干净地集合 Windows 应用到你的桌面。 也就是说，wine中间件将windows的一些函数通过posix接口模式实现了，只要wine xxx.exe 就能执行windows的可执行程序。于是就尝试了下，把一些过程记录下。 在centos 上安装wine 1234yum install epel-releaseyum install winewine --version安装成功 制作成docker容器，700M好大，搜了官网资料没找到如何裁剪 将进程的依赖库，如mfc120.dll 复制到linux目录中（windows的库不需要复制，如kernel32.dll) 将xxx.exe 复制到linux目录 执行 wine xxx.exe 喔哦，服务正常运行 剩下的就是如何后台运行？ 尝试使用nohup、disown命令，虽然可以在后台运行，但cpu却出奇的高（80%）。采用的方式就是使用screen start.sh1234567#! /bin/bashscreen_name=$&quot;hallsvr&quot;cmd=$&quot;wine hallsvr.exe&quot;screen -X -S $screen_name quitscreen -dmS $screen_namescreen -x -S $screen_name -p 0 -X stuff &quot;$cmd&quot;screen -x -S $screen_name -p 0 -X stuff $&apos;\n&apos; stop.sh1234#! /bin/bashscreen_name=$&quot;hallsvr&quot;cmd=$&quot;wine hallsvr.exe&quot;screen -X -S $screen_name quit cpu 稳定在8%左右。 异常、调试： 使用MiniDumpWriteDump可以保持minidump，也可以使用windbg分析这个dmp文件，但却不能保存fulldemp； 调试可以使用winedbg。 稳定性、功能性测试还在继续中，但我其实已经不推荐这个方式了，wine更适合用在有gui界面的程序，服务还是原生跨平台的更好。 总结方案一]]></content>
+      <categories>
+        <category>工作笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[电影评论]]></title>
+    <url>%2F2020%2F01%2F10%2F%E7%94%B5%E5%BD%B1%E8%AF%84%E8%AE%BA%2F</url>
+    <content type="text"><![CDATA[最近一段时间在看一些影评，主要是 “大象放映室”和“阿斗归来了”。 其中“大象放映室”讲解的几部片子，看着看着就流泪，还是挺感触的，如果自己看电影不一定能感受的出来，但是听着她的讲解，眼泪就自然的流了出来。]]></content>
+      <categories>
+        <category>生活琐事</category>
+      </categories>
+  </entry>
+  <entry>
     <title><![CDATA[贫穷的本质]]></title>
     <url>%2F2020%2F01%2F10%2F%E8%B4%AB%E7%A9%B7%E7%9A%84%E6%9C%AC%E8%B4%A8%2F</url>
     <content type="text"><![CDATA[从10个角度讲解贫穷的本质，实际上，我们如果不注意，其实也会立刻变的贫穷。 不要试图鹤立鸡群，离开那群鸡是最好的选择。要真正脱离一个阶层，向上突破是非常困难的，经济、人际、精神，从微小的生活习惯到思想的意识形态要全面与之前原生态环境进行脱离，从这个意义上来看，学习和思考之路不管有多么艰辛，多么遥远，我们都要竭力前行，脱离贫困，这远比靠买彩票一夜暴富，更接近人生的进步状态。上坡是非常困难的，但下坡却快的多，即使你小步的上行，你也会觉的世界在抬高。不论脱贫的过程多么孤单，多么艰难，如果你觉的时机到了，就要坚定自己的信念、前行，脱贫觉不要回头。]]></content>
@@ -632,9 +648,9 @@
   <entry>
     <title><![CDATA[中老年人麻将消消游戏]]></title>
     <url>%2F2019%2F05%2F09%2F%E4%B8%AD%E8%80%81%E5%B9%B4%E4%BA%BA%E6%B8%B8%E6%88%8F%2F</url>
-    <content type="text"><![CDATA[自己用cocoscreate 做的一款中老年麻将消消游戏，发现爸爸、妈妈、老婆很喜欢，有版权哦！！ 游戏入口麻将消消PC版 玩法说明通过查找最上层相同的麻将点击消除，其中左上角有三张交换牌。]]></content>
+    <content type="text"><![CDATA[自己用cocoscreate 做的一款中老年麻将消消游戏，发现爸爸、妈妈、老婆很喜欢，有版权证书！！ 游戏入口麻将消消PC版 玩法说明通过查找最上层相同的麻将点击消除，其中左上角有三张交换牌。]]></content>
       <categories>
-        <category>工作笔记</category>
+        <category>小游戏</category>
       </categories>
   </entry>
   <entry>
