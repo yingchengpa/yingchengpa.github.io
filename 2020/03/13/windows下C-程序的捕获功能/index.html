@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="背景因为打算把服务器从win2008 server升级到win2012，所以需要验证下新系统对程序异常的捕获能力。 测试之前使用的是 link 里面说到的方法。 我很关注 stack Security Checks ，因为类似如下代码，12345void xxx()&amp;#123;	char szchar[8];	sprintf(szchar, &amp;quot;%s&amp;quot;, &amp;quot;111111">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-16T04:01:54.180Z">
+<meta property="og:updated_time" content="2020-03-17T03:56:29.449Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="windows下C++程序的捕获功能">
 <meta name="twitter:description" content="背景因为打算把服务器从win2008 server升级到win2012，所以需要验证下新系统对程序异常的捕获能力。 测试之前使用的是 link 里面说到的方法。 我很关注 stack Security Checks ，因为类似如下代码，12345void xxx()&amp;#123;	char szchar[8];	sprintf(szchar, &amp;quot;%s&amp;quot;, &amp;quot;111111">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-16 12:01:54" itemprop="dateModified" datetime="2020-03-16T12:01:54+08:00">2020-03-16</time>
+                <time title="修改时间：2020-03-17 11:56:29" itemprop="dateModified" datetime="2020-03-17T11:56:29+08:00">2020-03-17</time>
               
             
           </span>
@@ -499,6 +499,9 @@
 <li><p>google breakpad 可作为备选，优点跨平台</p>
 </li>
 </ol>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><p>最近线上刚好又出现了异常，这次是在win2008系统下已经hook api的情况下还是出现了异常，并且测试使用Exception-Handling也无法捕获到dump，最后还是依靠AutoDebug自动保存了dump，并分析出来是double free导致heap异常。</p>
+<p>但是我使用demo测试模拟double free是不会出现异常的。</p>
+<p>最终最靠谱的方案还是使用AutoDebug来捕获最靠谱。</p>
 
       
     </div>
@@ -571,6 +574,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/19/vs2019链接时找不到kernel32-lib/" rel="prev" title="vs2019链接时找不到kernel32.lib">
+                vs2019链接时找不到kernel32.lib <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -646,7 +653,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">124</span>
+                    <span class="site-state-item-count">131</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -683,7 +690,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -738,7 +747,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一"><span class="nav-number">3.</span> <span class="nav-text">一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二"><span class="nav-number">4.</span> <span class="nav-text">二</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三"><span class="nav-number">5.</span> <span class="nav-text">三</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四"><span class="nav-number">6.</span> <span class="nav-text">四</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五"><span class="nav-number">7.</span> <span class="nav-text">五</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一"><span class="nav-number">3.</span> <span class="nav-text">一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二"><span class="nav-number">4.</span> <span class="nav-text">二</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三"><span class="nav-number">5.</span> <span class="nav-text">三</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四"><span class="nav-number">6.</span> <span class="nav-text">四</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五"><span class="nav-number">7.</span> <span class="nav-text">五</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#补充"><span class="nav-number">9.</span> <span class="nav-text">补充</span></a></li></ol></div>
             
 
           </div>
@@ -759,7 +768,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">浙ICP备18041977号 </a>&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
