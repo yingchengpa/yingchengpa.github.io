@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="睡在床板下">
 <meta property="og:description" content="背景因为打算把服务器从win2008 server升级到win2012，所以需要验证下新系统对程序异常的捕获能力。 测试之前使用的是 link 里面说到的方法。 我很关注 stack Security Checks ，因为类似如下代码，12345void xxx()&amp;#123;	char szchar[8];	sprintf(szchar, &amp;quot;%s&amp;quot;, &amp;quot;111111">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-17T03:56:29.449Z">
+<meta property="og:updated_time" content="2020-06-01T09:18:28.429Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="windows下C++程序的捕获功能">
 <meta name="twitter:description" content="背景因为打算把服务器从win2008 server升级到win2012，所以需要验证下新系统对程序异常的捕获能力。 测试之前使用的是 link 里面说到的方法。 我很关注 stack Security Checks ，因为类似如下代码，12345void xxx()&amp;#123;	char szchar[8];	sprintf(szchar, &amp;quot;%s&amp;quot;, &amp;quot;111111">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-03-17 11:56:29" itemprop="dateModified" datetime="2020-03-17T11:56:29+08:00">2020-03-17</time>
+                <time title="修改时间：2020-06-01 17:18:28" itemprop="dateModified" datetime="2020-06-01T17:18:28+08:00">2020-06-01</time>
               
             
           </span>
@@ -488,7 +488,7 @@
 <h1 id="三"><a href="#三" class="headerlink" title="三"></a>三</h1><p>使用google 的<a href="https://github.com/google/breakpad" target="_blank" rel="noopener">breakpad</a>,进行捕获异常。<br>分为进程内异常捕获和进程外异常捕获</p>
 <p>异常捕获也是无法捕获stack 异常的。</p>
 <h1 id="四"><a href="#四" class="headerlink" title="四"></a>四</h1><p>按照 二 中链接给出的异常类型进行验证<br><a href="https://www.codeproject.com/Articles/207464/Exception-Handling-in-Visual-Cplusplus" target="_blank" rel="noopener">link</a><br>中的CCrashHandler 捕获能力最好推荐，google的breakpad 可以c/s捕获进程， hook api 可以获取win7下的crt异常</p>
-<h1 id="五"><a href="#五" class="headerlink" title="五"></a>五</h1><p>考虑windows本身有AutoDebug功能，修改注册表“\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug”<br>auto=1<br>Debugger=<br>“C:\Program Files (x86)\Debugging Tools for Windows (x86)\ntsd.exe” -p %ld -e %ld -g -c “.dump /f /u d:\1.dmp ;q “</p>
+<h1 id="五"><a href="#五" class="headerlink" title="五"></a>五</h1><p>考虑windows本身有AutoDebug功能，修改注册表“\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug”<br>auto=1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Debugger=</span><br><span class="line">&quot;C:\Program Files (x86)\Debugging Tools for Windows (x86)\ntsd.exe&quot; -p %ld -e %ld -g -c &quot;.dump /f /u d:\1.dmp ;q &quot;</span><br></pre></td></tr></table></figure></p>
 <p>这样就可以把异常通过ntsd 自动保存dump。</p>
 <p>缺点是： 无法区分进程名是什么</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
@@ -653,7 +653,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">142</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
