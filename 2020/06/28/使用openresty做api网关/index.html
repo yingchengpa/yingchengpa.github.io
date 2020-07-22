@@ -96,17 +96,19 @@
 
 
 
-  <meta name="description" content="转  https://my.oschina.net/yearnfar/blog/297733 将网络的模型说的比较清晰的文章">
+  <meta name="description" content="背景之前文章 自动登陆并获取订单信息, 通过python脚本已经实现了定时从某企业官网爬取用户数据。接着我们需要做如下几个工作：  将数据写入自己的mysql  通过web客户端查看mysql中的数据   技术选型 用什么语言做http服务器 ？ c++、 go、c#、java 都可以，  或者用开源组件来做http服务器 ？    我的选择是使用openrestry，通过lua语言来实现mysq">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一篇讲解select&#x2F;iocp&#x2F;epoll等网络模型推荐的文章">
-<meta property="og:url" content="http://www.91dengdeng.cn/2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/index.html">
+<meta property="og:title" content="使用openresty做api网关">
+<meta property="og:url" content="http://www.91dengdeng.cn/2020/06/28/使用openresty做api网关/index.html">
 <meta property="og:site_name" content="睡在床板下">
-<meta property="og:description" content="转  https://my.oschina.net/yearnfar/blog/297733 将网络的模型说的比较清晰的文章">
+<meta property="og:description" content="背景之前文章 自动登陆并获取订单信息, 通过python脚本已经实现了定时从某企业官网爬取用户数据。接着我们需要做如下几个工作：  将数据写入自己的mysql  通过web客户端查看mysql中的数据   技术选型 用什么语言做http服务器 ？ c++、 go、c#、java 都可以，  或者用开源组件来做http服务器 ？    我的选择是使用openrestry，通过lua语言来实现mysq">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-19T06:10:09.398Z">
+<meta property="og:image" content="http://www.91dengdeng.cn/images/pasted-58.png">
+<meta property="og:updated_time" content="2020-06-28T08:45:17.163Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一篇讲解select&#x2F;iocp&#x2F;epoll等网络模型推荐的文章">
-<meta name="twitter:description" content="转  https://my.oschina.net/yearnfar/blog/297733 将网络的模型说的比较清晰的文章">
+<meta name="twitter:title" content="使用openresty做api网关">
+<meta name="twitter:description" content="背景之前文章 自动登陆并获取订单信息, 通过python脚本已经实现了定时从某企业官网爬取用户数据。接着我们需要做如下几个工作：  将数据写入自己的mysql  通过web客户端查看mysql中的数据   技术选型 用什么语言做http服务器 ？ c++、 go、c#、java 都可以，  或者用开源组件来做http服务器 ？    我的选择是使用openrestry，通过lua语言来实现mysq">
+<meta name="twitter:image" content="http://www.91dengdeng.cn/images/pasted-58.png">
 
 
 
@@ -114,7 +116,7 @@
 
   
   
-  <link rel="canonical" href="http://www.91dengdeng.cn/2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/">
+  <link rel="canonical" href="http://www.91dengdeng.cn/2020/06/28/使用openresty做api网关/">
 
 
 
@@ -124,7 +126,7 @@
   };
 </script>
 
-  <title>一篇讲解select/iocp/epoll等网络模型推荐的文章 | 睡在床板下</title>
+  <title>使用openresty做api网关 | 睡在床板下</title>
   
 
 
@@ -339,7 +341,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/">
+    <link itemprop="mainEntityOfPage" href="http://www.91dengdeng.cn/2020/06/28/使用openresty做api网关/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="睡在床板下">
@@ -356,7 +358,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">一篇讲解select/iocp/epoll等网络模型推荐的文章
+          <h1 class="post-title" itemprop="name headline">使用openresty做api网关
 
               
             
@@ -382,7 +384,7 @@
                 
               
 
-              <time title="创建时间：2019-08-19 14:08:00 / 修改时间：14:10:09" itemprop="dateCreated datePublished" datetime="2019-08-19T14:08:00+08:00">2019-08-19</time>
+              <time title="创建时间：2020-06-28 16:20:00 / 修改时间：16:45:17" itemprop="dateCreated datePublished" datetime="2020-06-28T16:20:00+08:00">2020-06-28</time>
             
 
             
@@ -423,8 +425,8 @@
                 </span>
             
                 <span class="post-meta-item-text">评论数：</span>
-                <a href="/2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/" itemprop="commentCount"></span>
+                <a href="/2020/06/28/使用openresty做api网关/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/06/28/使用openresty做api网关/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -459,9 +461,41 @@
       
 
       
-        <p>转  <a href="https://my.oschina.net/yearnfar/blog/297733" target="_blank" rel="noopener">https://my.oschina.net/yearnfar/blog/297733</a></p>
-<p>将网络的模型说的比较清晰的文章</p>
-
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>之前文章 <a href="https://www.91dengdeng.cn/2020/05/12/%E8%87%AA%E5%8A%A8%E5%8C%96%E7%99%BB%E9%99%86%E5%B9%B6%E8%8E%B7%E5%8F%96%E8%AE%A2%E5%8D%95%E4%BF%A1%E6%81%AF/">自动登陆并获取订单信息</a>, 通过python脚本已经实现了定时从某企业官网爬取用户数据。接着我们需要做如下几个工作：</p>
+<ul>
+<li><p>将数据写入自己的mysql</p>
+</li>
+<li><p>通过web客户端查看mysql中的数据</p>
+</li>
+</ul>
+<h1 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h1><ul>
+<li><p>用什么语言做http服务器 ？ c++、 go、c#、java 都可以，</p>
+</li>
+<li><p>或者用开源组件来做http服务器 ？ </p>
+</li>
+</ul>
+<p>我的选择是使用openrestry，通过lua语言来实现mysql数据的增、删、改查。</p>
+<p>优点：</p>
+<ul>
+<li><p>跨平台</p>
+</li>
+<li><p>开发成本低。搭建好框架后，lua代码只要关心sql语句的实现就可以了。</p>
+</li>
+<li><p>易维护、易升级、易调试</p>
+</li>
+</ul>
+<h1 id="技术要点"><a href="#技术要点" class="headerlink" title="技术要点"></a>技术要点</h1><p>lua 语言学习还是比较快的，因为我只是使用mysql的功能，所以只要熟悉基本的函数、字符串、json对象的使用就可以了。</p>
+<ul>
+<li><p>nginx.conf 上配置 lua</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /hzjzkj</span><br><span class="line">		&#123;</span><br><span class="line">			</span><br><span class="line">			default_type text/html;</span><br><span class="line"></span><br><span class="line">			content_by_lua_file hzjzkj_mysql.lua;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hzjzkj_mysql.lua 实现基本功能（见末尾）</p>
+</li>
+<li><p>web的报表界面使用adminLTE的jsgrid 实现</p>
+</li>
+</ul>
+<h1 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h1><p><img src="/images/pasted-58.png" alt="upload successful"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">local cjson = require &quot;cjson&quot;</span><br><span class="line">local mysql = require(&quot;resty.mysql&quot;)</span><br><span class="line"></span><br><span class="line">local db_config = &#123;</span><br><span class="line">    host = &apos;127.0.0.1&apos;,</span><br><span class="line">    port = 3306,</span><br><span class="line">    database = &apos;test&apos;,</span><br><span class="line">    user = &apos;test&apos;,</span><br><span class="line">    password = &apos;test&apos;,</span><br><span class="line">    orderlist = &apos;orderlist&apos;,</span><br><span class="line">	orderdetail = &apos;orderdetail&apos;,</span><br><span class="line">	tblhetong = &apos;hetong&apos;,</span><br><span class="line">	tbluser=&apos;user&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">local args = ngx.req.get_uri_args()</span><br><span class="line">local action = args[&apos;action&apos;]</span><br><span class="line"></span><br><span class="line">local db,err</span><br><span class="line"></span><br><span class="line">function dbinit()</span><br><span class="line">	db, err = mysql:new()</span><br><span class="line">	if not db then</span><br><span class="line">		ngx.say(&quot;failed to instantiate mysql: &quot;, err)</span><br><span class="line">		return</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	db:set_timeout(5000) -- 5 sec</span><br><span class="line"></span><br><span class="line">	local ok, err, errcode, sqlstate = db:connect(&#123;</span><br><span class="line">		host = db_config.host,</span><br><span class="line">		port = db_config.port,</span><br><span class="line">		database = db_config.database,</span><br><span class="line">		user = db_config.user,</span><br><span class="line">		password = db_config.password&#125;)</span><br><span class="line"></span><br><span class="line">	if not ok then</span><br><span class="line">		ngx.log(ngx.ERR, &quot;failed to connect: &quot;, err, &quot;: &quot;, errcode, &quot; &quot;, sqlstate)</span><br><span class="line">		return </span><br><span class="line">	end</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">function dbinsert()</span><br><span class="line">	local res, err, errcode, sqlstate =</span><br><span class="line">	db:query(&quot;insert into cats (name) values (\&apos;Tom\&apos;)&quot;)</span><br><span class="line">	if not res then</span><br><span class="line">		ngx.say(&quot;bad result: &quot;, err, &quot;: &quot;, errcode, &quot;: &quot;, sqlstate, &quot;.&quot;)</span><br><span class="line">		return</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	ngx.say(res.affected_rows, &quot; rows inserted into table cats &quot;,</span><br><span class="line">		&quot;(last insert id: &quot;, res.insert_id, &quot;)&quot;)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">function dbquery()</span><br><span class="line">	local res, err, errcode, sqlstate =</span><br><span class="line">	db:query(&quot;select * from cats order by id asc&quot;, 10)</span><br><span class="line">	if not res then</span><br><span class="line">		ngx.say(&quot;bad result: &quot;, err, &quot;: &quot;, errcode, &quot;: &quot;, sqlstate, &quot;.&quot;)</span><br><span class="line">		return</span><br><span class="line">	end</span><br><span class="line">	</span><br><span class="line">   -- ngx.say(&quot;result: &quot;, cjson.encode(res))</span><br><span class="line">   local index = 1</span><br><span class="line">   while res[index] do </span><br><span class="line">		ngx.say(res[index].id)</span><br><span class="line">		ngx.say(res[index].name)</span><br><span class="line">		index = index+1</span><br><span class="line">	end</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">function dbclose()</span><br><span class="line">-- or just close the connection right away:</span><br><span class="line">	local ok, err = db:close()</span><br><span class="line">	if not ok then</span><br><span class="line">		 ngx.say(&quot;failed to close: &quot;, err)</span><br><span class="line">		 return</span><br><span class="line">	 end</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">function getdatafromsql(sql)</span><br><span class="line">	local res, err, errno, sqlstate = db:query(sql)</span><br><span class="line">	</span><br><span class="line">	if not res then</span><br><span class="line">		ngx.say(cjson.encode(&#123;code=200, message=err, data=nil&#125;))</span><br><span class="line">	else</span><br><span class="line">		ngx.say(cjson.encode(&#123;code=200, message=&quot;&quot;, data=res&#125;))</span><br><span class="line">	end</span><br><span class="line">	return res</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">function insertdatafromsql(sql)</span><br><span class="line">	local res, err, errno, sqlstate = db:query(sql)</span><br><span class="line">	</span><br><span class="line">	if not res then</span><br><span class="line">		ngx.say(&quot;bad result: &quot;,sql,&quot;:&quot;, err, &quot;: &quot;, errcode, &quot;: &quot;, sqlstate, &quot;.&quot;)</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">-- 获取所有物品，用于分析价格走势</span><br><span class="line">function GetDetails()</span><br><span class="line">    ngx.req.read_body()</span><br><span class="line"></span><br><span class="line">    local args, err = ngx.req.get_post_args()</span><br><span class="line">    if not args then</span><br><span class="line">       ngx.say(&quot;failed to get post args: &quot;, err)</span><br><span class="line">            return</span><br><span class="line">	end</span><br><span class="line"></span><br><span class="line">	-- 返回所有数据</span><br><span class="line">	local sql = &apos;SELECT d.*, t.FStatus AS HTStatus ,t.FDate FROM orderdetail d ,orderlist t  WHERE  d.FBillNo_BillNo = t.FBillNo_BillNo &apos;</span><br><span class="line"></span><br><span class="line">	getdatafromsql(sql)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-- 根据最近时间查询orderlist信息</span><br><span class="line">if action == &apos;GetOrderList&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	GetOrderList()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 插入orderlist 数据</span><br><span class="line">elseif action == &apos;InsertOrderList&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	InsertOrderList()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 删除OrderList数据</span><br><span class="line">elseif action == &apos;DeleteOrderList&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	DeleteOrderList()</span><br><span class="line">	dbclose()</span><br><span class="line"></span><br><span class="line">-- 根据合同号orderdetail信息</span><br><span class="line">elseif action == &apos;GetOrderDetail&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	GetOrderDetail()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 获取detail 信息</span><br><span class="line">elseif action == &apos;GetDetails&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	GetDetails()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 插入orderdetail 数据</span><br><span class="line">elseif action == &apos;InsertOrderDetail&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	InsertOrderDetail()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 获取指定销售员合同数据&amp;商品信息</span><br><span class="line">elseif action == &apos;GetHetongDetail&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	GetHetongDetail()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 获取指定销售员合同数据</span><br><span class="line">elseif action == &apos;GetHetong&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	GetHetong()</span><br><span class="line">	dbclose()</span><br><span class="line">-- 导入合同数据</span><br><span class="line">elseif action ==&apos;InsertHetong&apos; then</span><br><span class="line">	dbinit()</span><br><span class="line">	InsertHetong()</span><br><span class="line">	dbclose()</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -524,8 +558,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/15/安防行业视频播放器的设计/" rel="next" title="安防行业视频播放器的设计">
-                <i class="fa fa-chevron-left"></i> 安防行业视频播放器的设计
+              <a href="/2020/06/11/boost-lru-cache-使用/" rel="next" title="boost lru_cache 使用">
+                <i class="fa fa-chevron-left"></i> boost lru_cache 使用
               </a>
             
           </div>
@@ -534,8 +568,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/08/29/丈人过世/" rel="prev" title="丈人过世">
-                丈人过世 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/30/格调-社会等级与生活品味/" rel="prev" title="格调-社会等级与生活品味">
+                格调-社会等级与生活品味 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -587,8 +621,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -603,7 +646,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">142</span>
+                    <span class="site-state-item-count">149</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -684,6 +727,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技术选型"><span class="nav-number">2.</span> <span class="nav-text">技术选型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技术要点"><span class="nav-number">3.</span> <span class="nav-text">技术要点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最终效果"><span class="nav-number">4.</span> <span class="nav-text">最终效果</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -859,9 +919,9 @@
 
 <script>
   var disqus_config = function() {
-    this.page.url = "http://www.91dengdeng.cn/2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/";
-    this.page.identifier = "2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/";
-    this.page.title = '一篇讲解select/iocp/epoll等网络模型推荐的文章';
+    this.page.url = "http://www.91dengdeng.cn/2020/06/28/使用openresty做api网关/";
+    this.page.identifier = "2020/06/28/使用openresty做api网关/";
+    this.page.title = '使用openresty做api网关';
     };
   function loadComments() {
     var d = document, s = d.createElement('script');
@@ -881,7 +941,7 @@
   
     <script>
   window.livereOptions = {
-    refer: '2019/08/19/一篇讲解select-iocp-epoll等网络模型推荐的文章/'
+    refer: '2020/06/28/使用openresty做api网关/'
   };
   (function(d, s) {
     var j, e = d.getElementsByTagName(s)[0];
